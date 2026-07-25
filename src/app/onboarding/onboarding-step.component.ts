@@ -4,7 +4,7 @@ import {TuiButton} from '@taiga-ui/core';
 import {OnboardingService} from './onboarding.service';
 
 @Component({
-    selector: 'app-onboarding-step',
+    selector: 'onboarding-step',
     imports: [TuiButton],
     templateUrl: './onboarding-step.component.html',
     styleUrl: './onboarding-step.component.less',
