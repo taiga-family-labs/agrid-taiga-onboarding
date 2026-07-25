@@ -5,19 +5,19 @@ import {ICellRendererParams} from 'ag-grid-community';
 
 import {CommentOnboardingService} from '../comments/comment-onboarding/comment-onboarding.service';
 import {CommentsSidebarService} from '../comments/comments-sidebar/comments-sidebar.service';
-import {OnboardingHintStepDirective} from '../onboarding/onboarding-hint-step.directive';
 import {OnboardingService} from '../onboarding/onboarding.service';
+import {OnboardingStepDirective} from '../onboarding/onboarding-step.directive';
 import {ProposalDto} from '../proposal.dto';
 
 @Component({
-    selector: 'app-employee-cell',
-    imports: [OnboardingHintStepDirective, TuiButton],
+    selector: 'employee-cell',
+    imports: [OnboardingStepDirective, TuiButton],
     templateUrl: './employee-cell.component.html',
     styleUrl: './employee-cell.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeCellComponent implements ICellRendererAngularComp {
-    private readonly sidebar = inject(CommentsSidebarService);
+    protected readonly sidebar = inject(CommentsSidebarService);
     protected readonly onboarding = inject(OnboardingService);
     protected readonly commentOnboarding = inject(CommentOnboardingService);
     protected proposal!: ProposalDto;
@@ -35,7 +35,7 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
     }
 
     protected openComments(): void {
-        if (this.onboarding.isActive(this.commentOnboarding.stepOne, this.proposal)) {
+        if (this.onboarding.isActive(this.commentOnboarding.steps[0])) {
             this.commentOnboarding.next();
             return;
         }
