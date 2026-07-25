@@ -3,16 +3,15 @@
 
     <button
         appearance="flat"
-        tuiHintAppearance="onboarding"
         tuiHintDirection="right"
         [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
-        [class.onboarding-active-anchor]="onboarding.isCommentStepFor(proposal.id)"
+        [onboardingHintStep]="1"
+        [onboardingHintStepContext]="proposal"
+        [tuiHint]="onboardingStep"
         iconStart="@tui.message-square"
         size="xs"
         tuiIconButton
         type="button"
-        [tuiHint]="onboardingStep"
-        [tuiHintManual]="onboarding.isCommentStepFor(proposal.id)"
         (click)="openComments()"
     ></button>
 </div>
