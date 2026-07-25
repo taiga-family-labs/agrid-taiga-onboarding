@@ -1,42 +1,25 @@
 import {DestroyRef, inject, Injectable} from '@angular/core';
 
-import {OnboardingService, type OnboardingRef} from '../../onboarding/onboarding.service';
-import {ProposalDto} from '../../proposal.dto';
-import {CommentsSidebarService} from '../comments-sidebar/comments-sidebar.service';
-import {COMMENT_ICON_ONBOARDING_STEP} from './comment-onboarding-steps/comment-icon-onboarding-step.component';
-import {COMMENT_SEGMENTS_ONBOARDING_STEP} from './comment-onboarding-steps/comment-segments-onboarding-step.component';
-import {JUSTIFICATION_ONBOARDING_STEP} from './comment-onboarding-steps/justification-onboarding-step.component';
-
-const COMMENTS_ONBOARDING_ID = 'comments';
-const COMMENTS_ONBOARDING_STORAGE_KEY = 'agrid-taiga-onboarding:comments:v1';
+import {OnboardingService} from '../../onboarding/onboarding.service';
+import {ONE_STEP} from './comment-onboarding-steps/one-step.component';
+import {THIRD_STEP} from './comment-onboarding-steps/third-step.component';
+import {TWO_STEP} from './comment-onboarding-steps/two-step.component';
 
 @Injectable()
 export class CommentOnboardingService {
-    private readonly onboarding = inject(OnboardingService);
-    private readonly sidebar = inject(CommentsSidebarService);
-    private readonly ref: OnboardingRef<ProposalDto> = this.onboarding.register({
-        id: COMMENTS_ONBOARDING_ID,
-        storageKey: COMMENTS_ONBOARDING_STORAGE_KEY,
-        steps: [
-            {
-                content: COMMENT_ICON_ONBOARDING_STEP,
-                beforeNext: (proposal) => this.sidebar.open(proposal),
-            },
-            {content: COMMENT_SEGMENTS_ONBOARDING_STEP},
-            {content: JUSTIFICATION_ONBOARDING_STEP},
-        ],
+    private readonly ref = inject(OnboardingService).register({
+        id: 'comment-triggers',
+        steps: [ONE_STEP, TWO_STEP, THIRD_STEP] as const,
     });
 
-    public readonly stepOne = this.ref.steps[0]!;
-    public readonly stepTwo = this.ref.steps[1]!;
-    public readonly stepThree = this.ref.steps[2]!;
+    public readonly steps = this.ref.steps;
 
     constructor() {
         inject(DestroyRef).onDestroy(() => this.ref.unregister());
     }
 
-    public start(proposal: ProposalDto, force = false): boolean {
-        return this.ref.start(proposal, force);
+    public start(force = false): boolean {
+        return this.ref.start(force);
     }
 
     public next(): void {
