@@ -1,9 +1,6 @@
 <aside class="sidebar">
     <header class="header">
-        <div>
-            <span class="back">‹ Назад</span>
-            <h2>Комментарии</h2>
-        </div>
+        <h2>Комментарии</h2>
 
         <button
             appearance="flat"
@@ -21,20 +18,17 @@
         <strong>{{ proposal().employeeFullName }}</strong>
     </div>
 
-    <div
-        class="tabs-anchor"
-        tuiHintAppearance="onboarding"
+    <tui-segmented
+        class="segments-anchor"
         tuiHintDirection="left"
-        [class.onboarding-active-anchor]="onboarding.step() === 'comment-tabs'"
+        [onboardingHintStep]="2"
         [tuiHint]="onboardingStep"
-        [tuiHintManual]="onboarding.step() === 'comment-tabs'"
+        [(activeItemIndex)]="activeSegment"
     >
-        <tui-tabs [(activeItemIndex)]="activeTab">
-            <button tuiTab type="button">Все</button>
-            <button tuiTab type="button">Обоснования</button>
-            <button tuiTab type="button">Другие комментарии</button>
-        </tui-tabs>
-    </div>
+        <button type="button">Все</button>
+        <button type="button">Обоснования</button>
+        <button type="button">Другие комментарии</button>
+    </tui-segmented>
 
     <section class="comments-empty">
         <div class="empty-icon">✦</div>
