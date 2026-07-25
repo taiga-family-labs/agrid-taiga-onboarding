@@ -1,54 +1,80 @@
 import {computed, Injectable, signal} from '@angular/core';
 
-import {Employee} from '../employee';
+import {ProposalDto} from '../proposal.dto';
 
-export type OnboardingStep = 'idle' | 'comment-icon' | 'comment-tabs' | 'justification-checkbox';
+export const COMMENTS_ONBOARDING_STEPS = [
+    'comment-icon',
+    'comment-tabs',
+    'justification-checkbox',
+] as const;
+
+export type CommentsOnboardingStep = (typeof COMMENTS_ONBOARDING_STEPS)[number];
 
 const ONBOARDING_STORAGE_KEY = 'agrid-taiga-onboarding:comments:v1';
 const MUTED_STATE = 'muted';
 
 @Injectable({providedIn: 'root'})
-export class OnboardingService {
+export class CommentsOnboardingService {
     private readonly mutedState = signal(this.readMutedState());
 
-    public readonly step = signal<OnboardingStep>('idle');
-    public readonly selectedEmployee = signal<Employee | null>(null);
+    public readonly step = signal<CommentsOnboardingStep | null>(null);
+    public readonly selectedProposal = signal<ProposalDto | null>(null);
     public readonly sidebarOpened = signal(false);
-    public readonly isRunning = computed(() => this.step() !== 'idle');
+    public readonly isRunning = computed(() => this.step() !== null);
     public readonly isMuted = this.mutedState.asReadonly();
     public readonly shouldAutoStart = computed(() => !this.mutedState());
+    public readonly currentStepNumber = computed(() => {
+        const currentStep = this.step();
+        const index = currentStep === null ? -1 : COMMENTS_ONBOARDING_STEPS.indexOf(currentStep);
 
-    public start(employee: Employee, force = false): boolean {
+        return index + 1;
+    });
+
+    public readonly stepsCount = COMMENTS_ONBOARDING_STEPS.length;
+
+    public start(proposal: ProposalDto, force = false): boolean {
         if (this.mutedState() && !force) {
             return false;
         }
 
-        this.selectedEmployee.set(employee);
+        this.selectedProposal.set(proposal);
         this.sidebarOpened.set(false);
-        this.step.set('comment-icon');
+        this.step.set(COMMENTS_ONBOARDING_STEPS[0]);
 
         return true;
     }
 
-    public openSidebar(employee: Employee): void {
-        this.selectedEmployee.set(employee);
+    public openSidebar(proposal: ProposalDto): void {
+        this.selectedProposal.set(proposal);
         this.sidebarOpened.set(true);
     }
 
-    public showTabsStep(employee: Employee): void {
-        this.openSidebar(employee);
-        this.step.set('comment-tabs');
+    public next(): void {
+        switch (this.step()) {
+            case 'comment-icon':
+                if (this.selectedProposal() === null) {
+                    this.close();
+                    return;
+                }
+
+                this.sidebarOpened.set(true);
+                this.step.set('comment-tabs');
+                break;
+
+            case 'comment-tabs':
+                this.step.set('justification-checkbox');
+                break;
+
+            case 'justification-checkbox':
+                this.close();
+                break;
+
+            case null:
+                break;
+        }
     }
 
-    public showCheckboxStep(): void {
-        this.step.set('justification-checkbox');
-    }
-
-    public finish(): void {
-        this.mute();
-    }
-
-    public closeTour(): void {
+    public close(): void {
         this.mute();
     }
 
@@ -56,12 +82,12 @@ export class OnboardingService {
         this.sidebarOpened.set(false);
 
         if (this.step() === 'comment-tabs' || this.step() === 'justification-checkbox') {
-            this.closeTour();
+            this.close();
         }
     }
 
-    public isCommentStepFor(employeeId: number): boolean {
-        return this.step() === 'comment-icon' && this.selectedEmployee()?.id === employeeId;
+    public isCommentStepFor(proposalId: number): boolean {
+        return this.step() === 'comment-icon' && this.selectedProposal()?.id === proposalId;
     }
 
     private mute(): void {
@@ -72,7 +98,7 @@ export class OnboardingService {
         }
 
         this.mutedState.set(true);
-        this.step.set('idle');
+        this.step.set(null);
     }
 
     private readMutedState(): boolean {
