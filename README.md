@@ -20,10 +20,12 @@
 - `OnboardingStepComponent` задает общий layout шага и использует content projection;
 - интерфейсы и типы вынесены в `onboarding.types.ts`.
 
+`id` нужен для идентификации зарегистрированного flow, изоляции его шагов и построения ключа `localStorage`. Ключ формируется по шаблону `@onboarding.{id}.{version}`, где `version` по умолчанию равна `1`.
+
 ### Онбординг комментариев
 
 - `CommentOnboardingService` регистрирует три шага;
-- шаги представлены типизированным immutable tuple `steps`;
+- шаги представлены типизированным immutable tuple `steps`, поэтому сигнал для них не нужен;
 - содержимое находится в `comments/comment-onboarding/comment-onboarding-steps`;
 - файлы шагов называются `one-step`, `two-step` и `third-step`;
 - каждый шаг передается в Taiga UI как `PolymorpheusComponent`;
