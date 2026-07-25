@@ -1,0 +1,34 @@
+<div class="employee-cell">
+    <span class="name">{{ employee.name }}</span>
+
+    <button
+        appearance="flat"
+        [attr.aria-label]="'Открыть комментарии: ' + employee.name"
+        iconStart="@tui.message-square"
+        size="xs"
+        tuiIconButton
+        type="button"
+        (click)="openComments()"
+    >
+        @if (onboarding.isCommentStepFor(employee.id)) {
+            <tui-pulse
+                tuiHintAppearance="accent"
+                tuiHintDirection="end"
+                [tuiHint]="stepOne"
+                [tuiHintManual]="true"
+            >
+                <ng-template #stepOne>
+                    <app-onboarding-card
+                        actionText="Далее"
+                        description="По иконке комментария теперь можно увидеть и отклонения по заявке"
+                        preview="icons"
+                        title="Обоснования переехали"
+                        [currentStep]="1"
+                        (close)="onboarding.closeTour()"
+                        (next)="onboarding.showTabsStep(employee)"
+                    />
+                </ng-template>
+            </tui-pulse>
+        }
+    </button>
+</div>

@@ -1,0 +1,91 @@
+:host {
+    display: block;
+    inline-size: 27rem;
+    max-inline-size: calc(100vw - 2rem);
+}
+
+.card {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: 0.25rem;
+}
+
+.close {
+    position: absolute;
+    inset-block-start: -0.25rem;
+    inset-inline-end: -0.25rem;
+}
+
+h3 {
+    padding-inline-end: 2rem;
+}
+
+.preview {
+    overflow: hidden;
+    min-block-size: 8.75rem;
+    border-radius: 0.75rem;
+    background: #fff;
+    color: #333;
+}
+
+.preview-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: 2.1rem;
+    padding: 0 0.75rem;
+    border-block-end: 1px solid #e7e9ec;
+    font-size: 0.75rem;
+}
+
+.preview-comment {
+    color: #8a929c;
+
+    &.warning {
+        color: #e5484d;
+    }
+}
+
+.preview-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.625rem;
+    font-size: 0.7rem;
+
+    span {
+        padding: 0.35rem 0.5rem;
+        border-radius: 0.4rem;
+        background: #f0f1f2;
+    }
+}
+
+.preview-panel {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0 0.625rem 0.625rem;
+    padding: 0.75rem;
+    border-radius: 0.6rem;
+    background: #f5f6f7;
+    font-size: 0.7rem;
+}
+
+.preview-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 3.3rem 1rem;
+}
+
+.fake-checkbox {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    border: 1px solid #c9ced6;
+    border-radius: 0.35rem;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

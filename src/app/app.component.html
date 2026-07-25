@@ -1,0 +1,142 @@
+<tui-root>
+    <main class="page">
+        <header class="toolbar">
+            <div>
+                <h1 tuiTitle>
+                    Пересмотр компенсаций
+                    <span tuiSubtitle>Прототип AG Grid + Taiga UI без ngx-ui-tour</span>
+                </h1>
+            </div>
+
+            <button
+                appearance="outline"
+                size="m"
+                tuiButton
+                type="button"
+                (click)="startTour()"
+            >
+                Запустить онбординг
+            </button>
+        </header>
+
+        <div class="workspace" [class.sidebar-open]="onboarding.sidebarOpened()">
+            <section class="grid-shell">
+                <div class="grid-toolbar">
+                    <span>Перетащите сюда для группировки по строкам</span>
+                    <span>{{ rowData.length }} сотрудников</span>
+                </div>
+
+                <ag-grid-angular
+                    class="ag-theme-quartz grid"
+                    [columnDefs]="columnDefs"
+                    [defaultColDef]="defaultColDef"
+                    [rowData]="rowData"
+                    [rowHeight]="48"
+                    (gridReady)="onGridReady($event)"
+                />
+            </section>
+
+            @if (onboarding.sidebarOpened() && onboarding.selectedEmployee(); as employee) {
+                <aside class="sidebar">
+                    <header class="sidebar-header">
+                        <div>
+                            <span class="back">‹ Назад</span>
+                            <h2>Комментарии</h2>
+                        </div>
+
+                        <button
+                            appearance="flat"
+                            aria-label="Закрыть сайдбар"
+                            iconStart="@tui.x"
+                            size="m"
+                            tuiIconButton
+                            type="button"
+                            (click)="onboarding.closeSidebar()"
+                        ></button>
+                    </header>
+
+                    <div class="employee-summary">
+                        <span class="avatar">{{ employee.name.slice(0, 1) }}</span>
+                        <strong>{{ employee.name }}</strong>
+                    </div>
+
+                    <div
+                        class="tabs-anchor"
+                        tuiHintAppearance="accent"
+                        tuiHintDirection="start"
+                        [class.active-anchor]="onboarding.step() === 'comment-tabs'"
+                        [tuiHint]="stepTwo"
+                        [tuiHintManual]="onboarding.step() === 'comment-tabs'"
+                    >
+                        <tui-tabs [(activeItemIndex)]="activeTab">
+                            <button tuiTab type="button">Все</button>
+                            <button tuiTab type="button">Обоснования</button>
+                            <button tuiTab type="button">Другие комментарии</button>
+                        </tui-tabs>
+
+                        <ng-template #stepTwo>
+                            <app-onboarding-card
+                                actionText="Далее"
+                                description="Комментарии, отклонения и обоснования теперь будут находиться здесь"
+                                preview="tabs"
+                                title="Все комментарии в одном месте"
+                                [currentStep]="2"
+                                (close)="onboarding.closeTour()"
+                                (next)="onboarding.showCheckboxStep()"
+                            />
+                        </ng-template>
+                    </div>
+
+                    <section class="comments-empty">
+                        <div class="empty-icon">✦</div>
+                        <p>Комментариев по сотруднику пока нет</p>
+                    </section>
+
+                    <footer class="comment-form">
+                        <label class="textarea-label">
+                            Комментарий
+                            <textarea
+                                maxlength="2000"
+                                placeholder="Напишите комментарий"
+                                [(ngModel)]="comment"
+                            ></textarea>
+                            <span>{{ comment.length }}/2000</span>
+                        </label>
+
+                        <div class="form-actions">
+                            <label
+                                class="checkbox-anchor"
+                                tuiHintAppearance="accent"
+                                tuiHintDirection="start"
+                                [class.active-anchor]="onboarding.step() === 'justification-checkbox'"
+                                [tuiHint]="stepThree"
+                                [tuiHintManual]="onboarding.step() === 'justification-checkbox'"
+                            >
+                                <input type="checkbox" [(ngModel)]="isJustification" />
+                                <span>Учитывать как обоснование</span>
+                                <span class="question">?</span>
+
+                                <ng-template #stepThree>
+                                    <app-onboarding-card
+                                        actionText="Понятно"
+                                        description="Если по заявке есть отклонения от правил, комментарий может учитываться как обоснование"
+                                        preview="checkbox"
+                                        title="Комментарий, как обоснование"
+                                        [currentStep]="3"
+                                        (close)="onboarding.closeTour()"
+                                        (next)="onboarding.finish()"
+                                    />
+                                </ng-template>
+                            </label>
+
+                            <div class="buttons">
+                                <button appearance="flat" size="m" tuiButton type="button">Отмена</button>
+                                <button size="m" tuiButton type="button" (click)="sendComment()">Отправить</button>
+                            </div>
+                        </div>
+                    </footer>
+                </aside>
+            }
+        </div>
+    </main>
+</tui-root>

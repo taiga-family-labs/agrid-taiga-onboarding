@@ -1,0 +1,30 @@
+:host {
+    display: block;
+    inline-size: 100%;
+}
+
+.employee-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    inline-size: 100%;
+    block-size: 100%;
+}
+
+.name {
+    overflow: hidden;
+    flex: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+button {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+tui-pulse {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+}
