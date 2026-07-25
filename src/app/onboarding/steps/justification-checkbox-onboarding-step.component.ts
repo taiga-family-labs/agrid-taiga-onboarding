@@ -3,7 +3,7 @@ import {TuiButton, TuiTitle} from '@taiga-ui/core';
 import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
 
 import {OnboardingStepComponent} from '../onboarding-step.component';
-import {CommentsOnboardingService} from '../onboarding.service';
+import {OnboardingService} from '../onboarding.service';
 
 @Component({
     selector: 'app-justification-checkbox-onboarding-step',
@@ -58,7 +58,7 @@ import {CommentsOnboardingService} from '../onboarding.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JustificationCheckboxOnboardingStepComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
+    protected readonly onboarding = inject(OnboardingService);
 }
 
 export const JUSTIFICATION_CHECKBOX_ONBOARDING_STEP = new PolymorpheusComponent(
