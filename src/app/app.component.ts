@@ -1,7 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {TuiButton, TuiHint, TuiRoot, TuiTitle} from '@taiga-ui/core';
-import {TuiTabs} from '@taiga-ui/kit';
+import {TuiButton, TuiRoot, TuiTitle} from '@taiga-ui/core';
 import {AgGridAngular} from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -11,38 +9,26 @@ import {
     ModuleRegistry,
 } from 'ag-grid-community';
 
-import {EMPLOYEES} from './data/employees';
-import {Employee} from './employee';
+import {CommentsSidebarComponent} from './comments/comments-sidebar/comments-sidebar.component';
+import {PROPOSALS} from './data/proposals';
 import {EmployeeCellComponent} from './grid/employee-cell.component';
-import {OnboardingCardComponent} from './onboarding/onboarding-card.component';
-import {OnboardingService} from './onboarding/onboarding.service';
+import {CommentsOnboardingService} from './onboarding/onboarding.service';
+import {ProposalDto} from './proposal.dto';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
     selector: 'app-root',
-    imports: [
-        AgGridAngular,
-        FormsModule,
-        OnboardingCardComponent,
-        TuiButton,
-        TuiHint,
-        TuiRoot,
-        TuiTabs,
-        TuiTitle,
-    ],
+    imports: [AgGridAngular, CommentsSidebarComponent, TuiButton, TuiRoot, TuiTitle],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-    protected readonly onboarding = inject(OnboardingService);
-    protected readonly rowData = EMPLOYEES;
-    protected activeTab = 0;
-    protected comment = '';
-    protected isJustification = false;
+    protected readonly onboarding = inject(CommentsOnboardingService);
+    protected readonly rowData = PROPOSALS;
 
-    protected readonly defaultColDef: ColDef<Employee> = {
+    protected readonly defaultColDef: ColDef<ProposalDto> = {
         sortable: true,
         filter: true,
         resizable: true,
@@ -50,10 +36,10 @@ export class AppComponent {
         minWidth: 140,
     };
 
-    protected readonly columnDefs: ColDef<Employee>[] = [
+    protected readonly columnDefs: ColDef<ProposalDto>[] = [
         {
             colId: 'employeeFullName',
-            field: 'name',
+            field: 'employeeFullName',
             headerName: 'Сотрудник',
             cellRenderer: EmployeeCellComponent,
             minWidth: 320,
@@ -65,10 +51,10 @@ export class AppComponent {
         {field: 'status', headerName: 'Статус', minWidth: 180},
     ];
 
-    private gridApi: GridApi<Employee> | null = null;
+    private gridApi: GridApi<ProposalDto> | null = null;
     private autoStartAttempted = false;
 
-    protected onGridReady(event: GridReadyEvent<Employee>): void {
+    protected onGridReady(event: GridReadyEvent<ProposalDto>): void {
         this.gridApi = event.api;
     }
 
@@ -82,23 +68,18 @@ export class AppComponent {
     }
 
     protected startTour(force = true): void {
-        const employee = this.rowData[0];
+        const proposal = this.rowData[0];
 
-        if (!employee || (!force && !this.onboarding.shouldAutoStart())) {
+        if (!proposal || (!force && !this.onboarding.shouldAutoStart())) {
             return;
         }
 
         this.gridApi?.ensureColumnVisible('employeeFullName');
         this.gridApi?.forEachNode((node) => {
-            if (node.data?.id === employee.id) {
+            if (node.data?.id === proposal.id) {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        this.onboarding.start(employee, force);
-    }
-
-    protected sendComment(): void {
-        this.comment = '';
-        this.isJustification = false;
+        this.onboarding.start(proposal, force);
     }
 }
