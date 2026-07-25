@@ -33,36 +33,33 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .checkbox-anchor {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    min-inline-size: 0;
-    padding: 0.3rem;
+    min-inline-size: max-content;
+    padding: 0.45rem;
     border-radius: 0.6rem;
     color: #555c65;
-}
+    white-space: nowrap;
 
-.question {
-    display: inline-grid;
-    place-items: center;
-    inline-size: 1rem;
-    block-size: 1rem;
-    border-radius: 50%;
-    background: #a9aeb5;
-    color: white;
-    font-size: 0.7rem;
+    tui-icon {
+        inline-size: 1rem;
+        block-size: 1rem;
+        color: #a9aeb5;
+    }
 }
 
 .buttons {
     display: flex;
+    flex: 0 0 auto;
     gap: 0.5rem;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
     .form-actions {
         align-items: stretch;
         flex-direction: column;
