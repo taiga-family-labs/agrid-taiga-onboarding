@@ -50,63 +50,6 @@
     block-size: calc(100vh - 10.6rem);
 }
 
-.sidebar {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto auto auto 1fr auto;
-    min-inline-size: 0;
-    border-inline-start: 1px solid #dfe3e8;
-    background: #fff;
-}
-
-.sidebar-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 1rem 1.25rem 0;
-
-    h2 {
-        margin: 0.35rem 0 0;
-        font-size: 1.75rem;
-    }
-}
-
-.back {
-    color: #757b84;
-}
-
-.employee-summary {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1.25rem;
-}
-
-.avatar {
-    display: grid;
-    place-items: center;
-    inline-size: 2.5rem;
-    block-size: 2.5rem;
-    border-radius: 50%;
-    background: #dce9ff;
-    color: #2764d8;
-}
-
-.tabs-anchor {
-    margin: 0 1.25rem;
-    border-radius: 0.75rem;
-}
-
-.active-anchor {
-    position: relative;
-    z-index: 901;
-    background: #fff;
-    box-shadow:
-        0 0 0 2px #6aa5ff,
-        0 0 0 4px #fff,
-        0 0 0 6px #6aa5ff;
-}
-
 .onboarding-backdrop {
     position: fixed;
     z-index: 900;
@@ -117,95 +60,8 @@
     touch-action: none;
 }
 
-.comments-empty {
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    color: #767d86;
-}
-
-.empty-icon {
-    display: grid;
-    place-items: center;
-    inline-size: 4.5rem;
-    block-size: 4.5rem;
-    border-radius: 50%;
-    background: #edf3fb;
-    color: #4584e6;
-    font-size: 2rem;
-}
-
-.comment-form {
-    display: grid;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    border-block-start: 1px solid #e5e7eb;
-}
-
-.textarea-label {
-    display: grid;
-    gap: 0.4rem;
-    color: #666d76;
-
-    textarea {
-        min-block-size: 6.5rem;
-        resize: vertical;
-        padding: 0.75rem;
-        border: 1px solid #d5d9df;
-        border-radius: 0.75rem;
-        font: inherit;
-    }
-
-    > span {
-        justify-self: end;
-        font-size: 0.75rem;
-    }
-}
-
-.form-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-}
-
-.checkbox-anchor {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-inline-size: 0;
-    padding: 0.3rem;
-    border-radius: 0.6rem;
-    color: #555c65;
-}
-
-.question {
-    display: inline-grid;
-    place-items: center;
-    inline-size: 1rem;
-    block-size: 1rem;
-    border-radius: 50%;
-    background: #a9aeb5;
-    color: white;
-    font-size: 0.7rem;
-}
-
-.buttons {
-    display: flex;
-    gap: 0.5rem;
-}
-
 @media (max-width: 1100px) {
     .workspace.sidebar-open {
         grid-template-columns: minmax(0, 1fr) 23rem;
-    }
-
-    .form-actions {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .buttons {
-        justify-content: flex-end;
     }
 }
