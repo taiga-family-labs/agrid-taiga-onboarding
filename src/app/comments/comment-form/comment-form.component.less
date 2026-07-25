@@ -1,0 +1,74 @@
+:host {
+    display: block;
+}
+
+.comment-form {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-block-start: 1px solid #e5e7eb;
+}
+
+.textarea-label {
+    display: grid;
+    gap: 0.4rem;
+    color: #666d76;
+
+    textarea {
+        min-block-size: 6.5rem;
+        resize: vertical;
+        padding: 0.75rem;
+        border: 1px solid #d5d9df;
+        border-radius: 0.75rem;
+        font: inherit;
+    }
+
+    > span {
+        justify-self: end;
+        font-size: 0.75rem;
+    }
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.checkbox-anchor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-inline-size: 0;
+    padding: 0.3rem;
+    border-radius: 0.6rem;
+    color: #555c65;
+}
+
+.question {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: 50%;
+    background: #a9aeb5;
+    color: white;
+    font-size: 0.7rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+@media (max-width: 1100px) {
+    .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .buttons {
+        justify-content: flex-end;
+    }
+}
