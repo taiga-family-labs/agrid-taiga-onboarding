@@ -36,6 +36,22 @@ jobs:
       - name: Build for GitHub Pages
         run: npm run build:pages 2>&1 | tee build.log
 
+      - name: Prepare GitHub Pages artifact
+        id: pages
+        shell: bash
+        run: |
+          index_file="$(find dist -type f -name index.html | head -n 1)"
+
+          if [[ -z "$index_file" ]]; then
+            echo "Angular build did not produce index.html"
+            find dist -maxdepth 4 -type f -print
+            exit 1
+          fi
+
+          output_dir="$(dirname "$index_file")"
+          cp "$index_file" "$output_dir/404.html"
+          echo "path=$output_dir" >> "$GITHUB_OUTPUT"
+
       - name: Upload build log on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -44,14 +60,11 @@ jobs:
           path: build.log
           retention-days: 7
 
-      - name: Add SPA fallback
-        run: cp dist/agrid-taiga-onboarding/browser/index.html dist/agrid-taiga-onboarding/browser/404.html
-
       - name: Upload GitHub Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/agrid-taiga-onboarding/browser
+          path: ${{ steps.pages.outputs.path }}
 
   deploy:
     name: Deploy
