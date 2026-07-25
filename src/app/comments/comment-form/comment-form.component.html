@@ -1,0 +1,36 @@
+<footer class="comment-form">
+    <label class="textarea-label">
+        Комментарий
+        <textarea
+            maxlength="2000"
+            placeholder="Напишите комментарий"
+            [attr.aria-label]="'Комментарий для ' + proposal().employeeFullName"
+            [(ngModel)]="comment"
+        ></textarea>
+        <span>{{ comment.length }}/2000</span>
+    </label>
+
+    <div class="form-actions">
+        <label
+            class="checkbox-anchor"
+            tuiHintAppearance="onboarding"
+            tuiHintDirection="left"
+            [class.onboarding-active-anchor]="onboarding.step() === 'justification-checkbox'"
+            [tuiHint]="onboardingStep"
+            [tuiHintManual]="onboarding.step() === 'justification-checkbox'"
+        >
+            <input type="checkbox" [(ngModel)]="isJustification" />
+            <span>Учитывать как обоснование</span>
+            <span class="question">?</span>
+        </label>
+
+        <div class="buttons">
+            <button appearance="flat" size="m" tuiButton type="button" (click)="cancel()">
+                Отмена
+            </button>
+            <button size="m" tuiButton type="button" (click)="submit()">
+                Отправить
+            </button>
+        </div>
+    </div>
+</footer>
