@@ -20,6 +20,8 @@
     "@angular/router": "19.2.6",
     "@taiga-ui/cdk": "4.69.0",
     "@taiga-ui/core": "4.69.0",
+    "@taiga-ui/event-plugins": "4.7.0",
+    "@taiga-ui/icons": "4.69.0",
     "@taiga-ui/kit": "4.69.0",
     "@taiga-ui/styles": "4.69.0",
     "ag-grid-angular": "34.2.0",
