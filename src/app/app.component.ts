@@ -10,9 +10,10 @@ import {
 } from 'ag-grid-community';
 
 import {CommentsSidebarComponent} from './comments/comments-sidebar/comments-sidebar.component';
+import {CommentsSidebarService} from './comments/comments-sidebar/comments-sidebar.service';
 import {PROPOSALS} from './data/proposals';
 import {EmployeeCellComponent} from './grid/employee-cell.component';
-import {CommentsOnboardingService} from './onboarding/onboarding.service';
+import {ONBOARDING_CONFIG, OnboardingService} from './onboarding/onboarding.service';
 import {ProposalDto} from './proposal.dto';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -20,12 +21,24 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
     selector: 'app-root',
     imports: [AgGridAngular, CommentsSidebarComponent, TuiButton, TuiRoot, TuiTitle],
+    providers: [
+        CommentsSidebarService,
+        OnboardingService,
+        {
+            provide: ONBOARDING_CONFIG,
+            useValue: {
+                count: 3,
+                storageKey: 'agrid-taiga-onboarding:comments:v1',
+            },
+        },
+    ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
+    protected readonly onboarding = inject<OnboardingService<ProposalDto>>(OnboardingService);
+    protected readonly sidebar = inject(CommentsSidebarService);
     protected readonly rowData = PROPOSALS;
 
     protected readonly defaultColDef: ColDef<ProposalDto> = {
@@ -74,6 +87,7 @@ export class AppComponent {
             return;
         }
 
+        this.sidebar.close();
         this.gridApi?.ensureColumnVisible('employeeFullName');
         this.gridApi?.forEachNode((node) => {
             if (node.data?.id === proposal.id) {
@@ -81,5 +95,13 @@ export class AppComponent {
             }
         });
         this.onboarding.start(proposal, force);
+    }
+
+    protected closeSidebar(): void {
+        this.sidebar.close();
+
+        if (this.onboarding.step() > 1) {
+            this.onboarding.close();
+        }
     }
 }
