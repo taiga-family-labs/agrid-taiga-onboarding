@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {TuiButton, TuiHint} from '@taiga-ui/core';
-import {TuiPulse} from '@taiga-ui/kit';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 
@@ -10,7 +9,7 @@ import {OnboardingService} from '../onboarding/onboarding.service';
 
 @Component({
     selector: 'app-employee-cell',
-    imports: [OnboardingCardComponent, TuiButton, TuiHint, TuiPulse],
+    imports: [OnboardingCardComponent, TuiButton, TuiHint],
     templateUrl: './employee-cell.component.html',
     styleUrl: './employee-cell.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
