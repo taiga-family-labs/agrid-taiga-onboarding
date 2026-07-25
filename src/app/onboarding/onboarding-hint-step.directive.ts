@@ -1,18 +1,17 @@
 import {computed, Directive, inject, input} from '@angular/core';
 import {tuiDirectiveBinding} from '@taiga-ui/cdk';
-import {TuiHintDirective, TuiHintManual} from '@taiga-ui/core';
+import {
+    type TuiHintDirection,
+    TuiHintDirective,
+    TuiHintManual,
+    TuiHintPosition,
+} from '@taiga-ui/core';
 
-import {OnboardingService} from './onboarding.service';
+import {OnboardingService, type OnboardingStepRef} from './onboarding.service';
 
 @Directive({
     selector: '[onboardingHintStep]',
-    hostDirectives: [
-        {
-            directive: TuiHintDirective,
-            inputs: ['tuiHint', 'tuiHintDirection'],
-        },
-        TuiHintManual,
-    ],
+    hostDirectives: [TuiHintDirective, TuiHintManual],
     host: {
         '[class.onboarding-active-anchor]': 'active()',
     },
@@ -20,19 +19,27 @@ import {OnboardingService} from './onboarding.service';
 export class OnboardingHintStepDirective {
     private readonly onboarding = inject(OnboardingService);
 
-    public readonly step = input.required<number>({alias: 'onboardingHintStep'});
-    public readonly context = input<unknown | null>(null, {
+    public readonly step = input.required<OnboardingStepRef>({
+        alias: 'onboardingHintStep',
+    });
+
+    public readonly context = input<unknown | undefined>(undefined, {
         alias: 'onboardingHintStepContext',
     });
 
-    protected readonly active = computed(() => {
-        const context = this.context();
-
-        return (
-            this.onboarding.step() === this.step() &&
-            (context === null || Object.is(this.onboarding.context(), context))
-        );
+    public readonly direction = input<TuiHintDirection>('bottom', {
+        alias: 'onboardingHintDirection',
     });
+
+    protected readonly active = computed(() =>
+        this.onboarding.isActive(this.step(), this.context()),
+    );
+
+    private readonly content = tuiDirectiveBinding(
+        TuiHintDirective,
+        'content',
+        computed(() => this.step().content),
+    );
 
     private readonly appearance = tuiDirectiveBinding(
         TuiHintDirective,
@@ -41,4 +48,10 @@ export class OnboardingHintStepDirective {
     );
 
     private readonly manual = tuiDirectiveBinding(TuiHintManual, 'visible', this.active);
+
+    private readonly position = tuiDirectiveBinding(
+        TuiHintPosition,
+        'direction',
+        this.direction,
+    );
 }
