@@ -47,7 +47,11 @@ export class OnboardingHintStepDirective {
         'onboarding',
     );
 
-    private readonly manual = tuiDirectiveBinding(TuiHintManual, 'visible', this.active);
+    private readonly manual = tuiDirectiveBinding(
+        TuiHintManual,
+        'tuiHintManual',
+        this.active,
+    );
 
     private readonly position = tuiDirectiveBinding(
         TuiHintPosition,
