@@ -1,21 +1,24 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {TuiButton, TuiHint} from '@taiga-ui/core';
+import {TuiButton} from '@taiga-ui/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 
-import {CommentsOnboardingService} from '../onboarding/onboarding.service';
+import {CommentsSidebarService} from '../comments/comments-sidebar/comments-sidebar.service';
+import {OnboardingHintStepDirective} from '../onboarding/onboarding-hint-step.directive';
+import {OnboardingService} from '../onboarding/onboarding.service';
 import {COMMENT_ICON_ONBOARDING_STEP} from '../onboarding/steps/comment-icon-onboarding-step.component';
 import {ProposalDto} from '../proposal.dto';
 
 @Component({
     selector: 'app-employee-cell',
-    imports: [TuiButton, TuiHint],
+    imports: [OnboardingHintStepDirective, TuiButton],
     templateUrl: './employee-cell.component.html',
     styleUrl: './employee-cell.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeCellComponent implements ICellRendererAngularComp {
-    protected readonly onboarding = inject(CommentsOnboardingService);
+    private readonly sidebar = inject(CommentsSidebarService);
+    protected readonly onboarding = inject<OnboardingService<ProposalDto>>(OnboardingService);
     protected readonly onboardingStep = COMMENT_ICON_ONBOARDING_STEP;
     protected proposal!: ProposalDto;
 
@@ -32,11 +35,10 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
     }
 
     protected openComments(): void {
-        if (this.onboarding.isCommentStepFor(this.proposal.id)) {
-            this.onboarding.next();
-            return;
-        }
+        this.sidebar.open(this.proposal);
 
-        this.onboarding.openSidebar(this.proposal);
+        if (this.onboarding.isActive(1, this.proposal)) {
+            this.onboarding.next();
+        }
     }
 }
