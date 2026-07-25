@@ -4,6 +4,7 @@
     <button
         appearance="flat"
         [attr.aria-label]="'Открыть комментарии: ' + employee.name"
+        [class.active-anchor]="onboarding.isCommentStepFor(employee.id)"
         iconStart="@tui.message-square"
         size="xs"
         tuiIconButton
