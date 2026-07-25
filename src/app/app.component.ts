@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, HostListener, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TuiButton, TuiHint, TuiRoot, TuiTitle} from '@taiga-ui/core';
 import {TuiTabs} from '@taiga-ui/kit';
@@ -100,12 +100,5 @@ export class AppComponent {
     protected sendComment(): void {
         this.comment = '';
         this.isJustification = false;
-    }
-
-    @HostListener('document:keydown.escape')
-    protected closeTourByEscape(): void {
-        if (this.onboarding.isRunning()) {
-            this.onboarding.closeTour();
-        }
     }
 }
