@@ -9,11 +9,12 @@ import {
     ModuleRegistry,
 } from 'ag-grid-community';
 
+import {CommentOnboardingService} from './comments/comment-onboarding/comment-onboarding.service';
 import {CommentsSidebarComponent} from './comments/comments-sidebar/comments-sidebar.component';
 import {CommentsSidebarService} from './comments/comments-sidebar/comments-sidebar.service';
 import {PROPOSALS} from './data/proposals';
 import {EmployeeCellComponent} from './grid/employee-cell.component';
-import {ONBOARDING_CONFIG, OnboardingService} from './onboarding/onboarding.service';
+import {OnboardingService} from './onboarding/onboarding.service';
 import {ProposalDto} from './proposal.dto';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -21,23 +22,14 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
     selector: 'app-root',
     imports: [AgGridAngular, CommentsSidebarComponent, TuiButton, TuiRoot, TuiTitle],
-    providers: [
-        CommentsSidebarService,
-        OnboardingService,
-        {
-            provide: ONBOARDING_CONFIG,
-            useValue: {
-                count: 3,
-                storageKey: 'agrid-taiga-onboarding:comments:v1',
-            },
-        },
-    ],
+    providers: [CommentOnboardingService, CommentsSidebarService],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-    protected readonly onboarding = inject<OnboardingService<ProposalDto>>(OnboardingService);
+    protected readonly onboarding = inject(OnboardingService);
+    protected readonly commentOnboarding = inject(CommentOnboardingService);
     protected readonly sidebar = inject(CommentsSidebarService);
     protected readonly rowData = PROPOSALS;
 
@@ -83,7 +75,7 @@ export class AppComponent {
     protected startTour(force = true): void {
         const proposal = this.rowData[0];
 
-        if (!proposal || (!force && !this.onboarding.shouldAutoStart())) {
+        if (!proposal || (!force && !this.commentOnboarding.shouldAutoStart())) {
             return;
         }
 
@@ -94,14 +86,14 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        this.onboarding.start(proposal, force);
+        this.commentOnboarding.start(proposal, force);
     }
 
     protected closeSidebar(): void {
         this.sidebar.close();
 
         if (this.onboarding.step() > 1) {
-            this.onboarding.close();
+            this.commentOnboarding.close();
         }
     }
 }
