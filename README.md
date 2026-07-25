@@ -1,46 +1,30 @@
 # AG Grid + Taiga UI onboarding prototype
 
-Прототип трехшагового онбординга для таблицы заявок и правого сайдбара комментариев.
+Учебный прототип трехшагового онбординга для AG Grid и правого сайдбара комментариев.
 
-## Что реализовано
+## Стек
 
 - Angular 19.2.6;
 - Taiga UI 4.69.0;
 - AG Grid 34.2.0;
-- моковые данные сотрудников;
-- Angular cell renderer для иконки комментария;
-- открытие сайдбара справа от таблицы;
-- три шага онбординга на `TuiHint` + `tuiHintManual`;
-- без `ngx-ui-tour-tui-hint`;
-- автоматический запуск при первом открытии страницы;
-- блокирующий backdrop на время прохождения;
-- сохранение mute-состояния в `localStorage`;
-- подсветка anchor-элементов и закрытие по `Escape`;
-- ручной повторный запуск кнопкой «Запустить онбординг».
+- без `ngx-ui-tour-tui-hint`.
 
-## Поведение onboarding
+## Архитектура
 
-При первом открытии страницы onboarding запускается автоматически и блокирует взаимодействие с интерфейсом под hint.
+### Общая инфраструктура
 
-Onboarding сохраняет значение `muted` по ключу:
+- `OnboardingService` регистрирует и удаляет независимые onboarding-flow.
+- `OnboardingHintStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`.
+- `OnboardingStepComponent` задает общий layout шага и использует content projection.
 
-```text
-agrid-taiga-onboarding:comments:v1
-```
+### Онбординг комментариев
 
-Mute-состояние записывается в двух случаях:
+- `CommentOnboardingService` регистрирует три шага, хранит целый `ProposalDto` как context и связывает первый переход с открытием сайдбара.
+- Содержимое шагов находится в `comments/comment-onboarding/comment-onboarding-steps`.
+- Каждый шаг передается в Taiga UI как `PolymorpheusComponent`.
+- При уничтожении feature-сервиса регистрация автоматически удаляется.
 
-- пользователь нажал крестик в карточке onboarding или `Escape`;
-- пользователь дошел до третьего шага и нажал «Понятно».
-
-После перезагрузки страницы onboarding автоматически больше не показывается. Кнопка «Запустить онбординг» оставлена для ручной демонстрации прототипа и запускает его принудительно.
-
-Чтобы проверить сценарий первого открытия повторно, выполните в DevTools:
-
-```js
-localStorage.removeItem('agrid-taiga-onboarding:comments:v1');
-location.reload();
-```
+После удаления временного онбординга общие `OnboardingService`, `OnboardingHintStepDirective` и `OnboardingStepComponent` можно оставить для следующих сценариев.
 
 ## Локальный запуск
 
@@ -51,13 +35,31 @@ npm start
 
 Откройте `http://localhost:4200`.
 
+Для повторной проверки первого посещения:
+
+```js
+localStorage.removeItem('agrid-taiga-onboarding:comments:v1');
+location.reload();
+```
+
+## Поведение
+
+1. Первый шаг привязан к иконке комментария выбранной заявки в AG Grid.
+2. Кнопка `Далее` открывает широкий сайдбар с целым `ProposalDto`.
+3. Второй шаг привязан к `tui-segmented`.
+4. Третий шаг привязан к контролу `Учитывать как обоснование`.
+5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
+6. `Escape` не закрывает онбординг.
+7. Прозрачный backdrop блокирует интерфейс под текущим шагом.
+8. Кнопка `Запустить онбординг` принудительно запускает демонстрацию повторно.
+
 ## Production build
 
 ```bash
 npm run build
 ```
 
-Для GitHub Pages используется отдельная сборка с корректным `base-href`:
+Для GitHub Pages:
 
 ```bash
 npm run build:pages
@@ -74,18 +76,10 @@ Workflow `.github/workflows/pages.yml`:
 - поддерживает ручной запуск через `workflow_dispatch`;
 - создает `404.html` для SPA fallback.
 
-Для публикации в настройках репозитория выберите:
+Для публикации выберите:
 
 `Settings` → `Pages` → `Build and deployment` → `Source: GitHub Actions`.
 
 После merge в `main` приложение будет доступно по адресу:
 
 `https://taiga-family-labs.github.io/agrid-taiga-onboarding/`
-
-## Сценарий
-
-1. Шаг привязан к иконке комментария первой строки AG Grid.
-2. По «Далее» открывается сайдбар выбранного сотрудника и подсвечиваются табы.
-3. Последний шаг привязан к чекбоксу «Учитывать как обоснование».
-
-Это намеренно локальный прототип: он показывает механику ручного тура на Taiga UI без отдельного tour framework.
