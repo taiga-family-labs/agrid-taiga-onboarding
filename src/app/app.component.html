@@ -19,7 +19,7 @@
             </button>
         </header>
 
-        <div class="workspace" [class.sidebar-open]="onboarding.sidebarOpened()">
+        <div class="workspace" [class.sidebar-open]="sidebar.opened()">
             <section class="grid-shell">
                 <div class="grid-toolbar">
                     <span>Перетащите сюда для группировки по строкам</span>
@@ -38,10 +38,10 @@
                 />
             </section>
 
-            @if (onboarding.sidebarOpened() && onboarding.selectedProposal(); as proposal) {
+            @if (sidebar.proposal(); as proposal) {
                 <app-comments-sidebar
                     [proposal]="proposal"
-                    (closed)="onboarding.closeSidebar()"
+                    (closed)="closeSidebar()"
                 />
             }
         </div>
