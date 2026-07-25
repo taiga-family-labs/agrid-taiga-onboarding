@@ -1,11 +1,11 @@
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input, output} from '@angular/core';
 import {TuiButton} from '@taiga-ui/core';
 import {TuiSegmented} from '@taiga-ui/kit';
 
 import {OnboardingHintStepDirective} from '../../onboarding/onboarding-hint-step.directive';
-import {COMMENT_TABS_ONBOARDING_STEP} from '../../onboarding/steps/comment-tabs-onboarding-step.component';
 import {ProposalDto} from '../../proposal.dto';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
+import {CommentOnboardingService} from '../comment-onboarding/comment-onboarding.service';
 
 @Component({
     selector: 'app-comments-sidebar',
@@ -15,7 +15,7 @@ import {CommentFormComponent} from '../comment-form/comment-form.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsSidebarComponent {
-    protected readonly onboardingStep = COMMENT_TABS_ONBOARDING_STEP;
+    protected readonly commentOnboarding = inject(CommentOnboardingService);
     protected activeSegment = 0;
 
     public readonly proposal = input.required<ProposalDto>();
