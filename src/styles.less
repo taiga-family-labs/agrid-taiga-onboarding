@@ -16,9 +16,17 @@ body {
     box-sizing: border-box;
 }
 
+// The blocking layer lives inside TuiRoot content. Taiga UI popups must stay
+// above it so onboarding controls receive pointer events.
+tui-root > tui-popups {
+    z-index: 1000;
+}
+
 // The default Taiga UI hint is capped at 20rem. The onboarding card is wider,
 // so its overlay needs an explicit size to keep the footer button inside.
 tui-hint[data-appearance='onboarding'] {
+    z-index: 1001;
     inline-size: min(29rem, calc(100vw - 1rem)) !important;
     max-inline-size: calc(100vw - 1rem) !important;
+    pointer-events: auto !important;
 }
