@@ -1,0 +1,45 @@
+<aside class="sidebar">
+    <header class="header">
+        <div>
+            <span class="back">‹ Назад</span>
+            <h2>Комментарии</h2>
+        </div>
+
+        <button
+            appearance="flat"
+            aria-label="Закрыть сайдбар"
+            iconStart="@tui.x"
+            size="m"
+            tuiIconButton
+            type="button"
+            (click)="closed.emit()"
+        ></button>
+    </header>
+
+    <div class="proposal-summary">
+        <span class="avatar">{{ proposal().employeeFullName.slice(0, 1) }}</span>
+        <strong>{{ proposal().employeeFullName }}</strong>
+    </div>
+
+    <div
+        class="tabs-anchor"
+        tuiHintAppearance="onboarding"
+        tuiHintDirection="left"
+        [class.onboarding-active-anchor]="onboarding.step() === 'comment-tabs'"
+        [tuiHint]="onboardingStep"
+        [tuiHintManual]="onboarding.step() === 'comment-tabs'"
+    >
+        <tui-tabs [(activeItemIndex)]="activeTab">
+            <button tuiTab type="button">Все</button>
+            <button tuiTab type="button">Обоснования</button>
+            <button tuiTab type="button">Другие комментарии</button>
+        </tui-tabs>
+    </div>
+
+    <section class="comments-empty">
+        <div class="empty-icon">✦</div>
+        <p>Комментариев по сотруднику пока нет</p>
+    </section>
+
+    <app-comment-form [proposal]="proposal()" />
+</aside>
