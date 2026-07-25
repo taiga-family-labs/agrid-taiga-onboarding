@@ -3,33 +3,28 @@
 
     <button
         appearance="flat"
+        tuiHintAppearance="onboarding"
+        tuiHintDirection="right"
         [attr.aria-label]="'Открыть комментарии: ' + employee.name"
         [class.active-anchor]="onboarding.isCommentStepFor(employee.id)"
         iconStart="@tui.message-square"
         size="xs"
         tuiIconButton
         type="button"
+        [tuiHint]="stepOne"
+        [tuiHintManual]="onboarding.isCommentStepFor(employee.id)"
         (click)="openComments()"
-    >
-        @if (onboarding.isCommentStepFor(employee.id)) {
-            <tui-pulse
-                tuiHintAppearance="onboarding"
-                tuiHintDirection="right"
-                [tuiHint]="stepOne"
-                [tuiHintManual]="true"
-            >
-                <ng-template #stepOne>
-                    <app-onboarding-card
-                        actionText="Далее"
-                        description="По иконке комментария теперь можно увидеть и отклонения по заявке"
-                        preview="icons"
-                        title="Обоснования переехали"
-                        [currentStep]="1"
-                        (close)="onboarding.closeTour()"
-                        (next)="onboarding.showTabsStep(employee)"
-                    />
-                </ng-template>
-            </tui-pulse>
-        }
-    </button>
+    ></button>
+
+    <ng-template #stepOne>
+        <app-onboarding-card
+            actionText="Далее"
+            description="По иконке комментария теперь можно увидеть и отклонения по заявке"
+            preview="icons"
+            title="Обоснования переехали"
+            [currentStep]="1"
+            (close)="onboarding.closeTour()"
+            (next)="onboarding.showTabsStep(employee)"
+        />
+    </ng-template>
 </div>
