@@ -20,8 +20,9 @@
 
     <tui-segmented
         class="segments-anchor"
-        onboardingHintDirection="left"
-        [onboardingHintStep]="commentOnboarding.stepTwo"
+        onboardingStepDirection="left"
+        size="m"
+        [onboardingStep]="commentOnboarding.steps[1]"
         [(activeItemIndex)]="activeSegment"
     >
         <button type="button">Все</button>
@@ -34,5 +35,5 @@
         <p>Комментариев по сотруднику пока нет</p>
     </section>
 
-    <app-comment-form [proposal]="proposal()" />
+    <comment-form [proposal]="proposal()" />
 </aside>
