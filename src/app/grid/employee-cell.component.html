@@ -3,11 +3,10 @@
 
     <button
         appearance="flat"
-        tuiHintDirection="right"
+        onboardingHintDirection="right"
         [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
-        [onboardingHintStep]="1"
+        [onboardingHintStep]="commentOnboarding.stepOne"
         [onboardingHintStepContext]="proposal"
-        [tuiHint]="onboardingStep"
         iconStart="@tui.message-square"
         size="xs"
         tuiIconButton
