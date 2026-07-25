@@ -17,6 +17,7 @@
     "@angular/forms": "19.2.6",
     "@angular/platform-browser": "19.2.6",
     "@angular/platform-browser-dynamic": "19.2.6",
+    "@angular/router": "19.2.6",
     "@taiga-ui/cdk": "4.69.0",
     "@taiga-ui/core": "4.69.0",
     "@taiga-ui/kit": "4.69.0",
