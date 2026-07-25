@@ -3,14 +3,14 @@
 
     <button
         appearance="flat"
-        onboardingHintDirection="right"
+        onboardingStepDirection="right"
         [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
-        [onboardingHintStep]="commentOnboarding.stepOne"
-        [onboardingHintStepContext]="proposal"
+        [onboardingStep]="commentOnboarding.steps[0]"
         iconStart="@tui.message-square"
         size="xs"
         tuiIconButton
         type="button"
         (click)="openComments()"
+        (onboardingStepOnNext)="sidebar.open(proposal)"
     ></button>
 </div>
