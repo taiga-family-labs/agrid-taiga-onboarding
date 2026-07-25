@@ -20,7 +20,7 @@ import {ProposalDto} from './proposal.dto';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
-    selector: 'app-root',
+    selector: 'onboarding-demo',
     imports: [AgGridAngular, CommentsSidebarComponent, TuiButton, TuiRoot, TuiTitle],
     providers: [CommentOnboardingService, CommentsSidebarService],
     templateUrl: './app.component.html',
@@ -86,7 +86,7 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        this.commentOnboarding.start(proposal, force);
+        this.commentOnboarding.start(force);
     }
 
     protected closeSidebar(): void {
