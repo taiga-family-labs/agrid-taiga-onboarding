@@ -5,6 +5,7 @@
   "scripts": {
     "start": "ng serve",
     "build": "ng build",
+    "build:pages": "ng build --configuration production --base-href /agrid-taiga-onboarding/",
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {
