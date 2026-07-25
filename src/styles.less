@@ -15,39 +15,3 @@ body {
 * {
     box-sizing: border-box;
 }
-
-// Applied automatically by OnboardingHintStepDirective.
-.onboarding-active-anchor {
-    position: relative;
-    z-index: 901;
-    background: #fff;
-    box-shadow:
-        0 0 0 2px #6aa5ff,
-        0 0 0 4px #fff,
-        0 0 0 6px #b5d2ff !important;
-}
-
-[onboardingStepAction] {
-    min-inline-size: 5.75rem;
-    background: #fff !important;
-    color: #303744 !important;
-
-    &:hover {
-        background: #f2f5fa !important;
-    }
-}
-
-// The blocking layer lives inside TuiRoot content. Taiga UI popups must stay
-// above it so onboarding controls receive pointer events.
-tui-root > tui-popups {
-    z-index: 1000;
-}
-
-// The default Taiga UI hint is capped at 20rem. The onboarding step is wider,
-// so its overlay needs an explicit size to keep projected actions inside.
-tui-hint[data-appearance='onboarding'] {
-    z-index: 1001;
-    inline-size: min(29rem, calc(100vw - 1rem)) !important;
-    max-inline-size: calc(100vw - 1rem) !important;
-    pointer-events: auto !important;
-}
