@@ -66,15 +66,25 @@ export class AppComponent {
     ];
 
     private gridApi: GridApi<Employee> | null = null;
+    private autoStartAttempted = false;
 
     protected onGridReady(event: GridReadyEvent<Employee>): void {
         this.gridApi = event.api;
     }
 
-    protected startTour(): void {
+    protected onFirstDataRendered(): void {
+        if (this.autoStartAttempted) {
+            return;
+        }
+
+        this.autoStartAttempted = true;
+        this.startTour(false);
+    }
+
+    protected startTour(force = true): void {
         const employee = this.rowData[0];
 
-        if (!employee) {
+        if (!employee || (!force && !this.onboarding.shouldAutoStart())) {
             return;
         }
 
@@ -84,7 +94,7 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        this.onboarding.start(employee);
+        this.onboarding.start(employee, force);
     }
 
     protected sendComment(): void {
