@@ -3,7 +3,7 @@ import {TuiButton, TuiTitle} from '@taiga-ui/core';
 import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
 
 import {OnboardingStepComponent} from '../onboarding-step.component';
-import {CommentsOnboardingService} from '../onboarding.service';
+import {OnboardingService} from '../onboarding.service';
 
 @Component({
     selector: 'app-comment-tabs-onboarding-step',
@@ -80,7 +80,7 @@ import {CommentsOnboardingService} from '../onboarding.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentTabsOnboardingStepComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
+    protected readonly onboarding = inject(OnboardingService);
 }
 
 export const COMMENT_TABS_ONBOARDING_STEP = new PolymorpheusComponent(
