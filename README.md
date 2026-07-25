@@ -24,7 +24,7 @@
 - Каждый шаг передается в Taiga UI как `PolymorpheusComponent`.
 - При уничтожении feature-сервиса регистрация автоматически удаляется.
 
-После удаления временного онбординга общие `OnboardingService`, `OnboardingHintStepDirective` и `OnboardingStepComponent` можно оставить для следующих сценариев.
+После удаления временного онбординга общие `OnboardingService`, `OnboardingHintStepDirective` и `OnboardingStepComponent` остаются для следующих сценариев. Нужно удалить только feature-provider, три anchor-binding и директорию `comments/comment-onboarding`.
 
 ## Локальный запуск
 
