@@ -13,15 +13,12 @@
     <div class="form-actions">
         <label
             class="checkbox-anchor"
-            tuiHintAppearance="onboarding"
-            tuiHintDirection="left"
-            [class.onboarding-active-anchor]="onboarding.step() === 'justification-checkbox'"
-            [tuiHint]="onboardingStep"
-            [tuiHintManual]="onboarding.step() === 'justification-checkbox'"
+            onboardingHintDirection="left"
+            [onboardingHintStep]="commentOnboarding.stepThree"
         >
             <input type="checkbox" [(ngModel)]="isJustification" />
             <span>Учитывать как обоснование</span>
-            <span class="question">?</span>
+            <tui-icon icon="@tui.circle-help" />
         </label>
 
         <div class="buttons">
