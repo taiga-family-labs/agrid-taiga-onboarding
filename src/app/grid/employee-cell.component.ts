@@ -3,10 +3,10 @@ import {TuiButton} from '@taiga-ui/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 
+import {CommentOnboardingService} from '../comments/comment-onboarding/comment-onboarding.service';
 import {CommentsSidebarService} from '../comments/comments-sidebar/comments-sidebar.service';
 import {OnboardingHintStepDirective} from '../onboarding/onboarding-hint-step.directive';
 import {OnboardingService} from '../onboarding/onboarding.service';
-import {COMMENT_ICON_ONBOARDING_STEP} from '../onboarding/steps/comment-icon-onboarding-step.component';
 import {ProposalDto} from '../proposal.dto';
 
 @Component({
@@ -18,8 +18,8 @@ import {ProposalDto} from '../proposal.dto';
 })
 export class EmployeeCellComponent implements ICellRendererAngularComp {
     private readonly sidebar = inject(CommentsSidebarService);
-    protected readonly onboarding = inject<OnboardingService<ProposalDto>>(OnboardingService);
-    protected readonly onboardingStep = COMMENT_ICON_ONBOARDING_STEP;
+    protected readonly onboarding = inject(OnboardingService);
+    protected readonly commentOnboarding = inject(CommentOnboardingService);
     protected proposal!: ProposalDto;
 
     public agInit(params: ICellRendererParams<ProposalDto>): void {
@@ -35,10 +35,11 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
     }
 
     protected openComments(): void {
-        this.sidebar.open(this.proposal);
-
-        if (this.onboarding.isActive(1, this.proposal)) {
-            this.onboarding.next();
+        if (this.onboarding.isActive(this.commentOnboarding.stepOne, this.proposal)) {
+            this.commentOnboarding.next();
+            return;
         }
+
+        this.sidebar.open(this.proposal);
     }
 }
