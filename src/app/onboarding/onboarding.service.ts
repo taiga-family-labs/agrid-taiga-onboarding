@@ -1,109 +1,78 @@
-import {computed, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, InjectionToken, signal} from '@angular/core';
 
-import {ProposalDto} from '../proposal.dto';
+export interface OnboardingConfig {
+    readonly count: number;
+    readonly storageKey: string;
+}
 
-export const COMMENTS_ONBOARDING_STEPS = [
-    'comment-icon',
-    'comment-tabs',
-    'justification-checkbox',
-] as const;
+export const ONBOARDING_CONFIG = new InjectionToken<OnboardingConfig>('ONBOARDING_CONFIG');
 
-export type CommentsOnboardingStep = (typeof COMMENTS_ONBOARDING_STEPS)[number];
-
-const ONBOARDING_STORAGE_KEY = 'agrid-taiga-onboarding:comments:v1';
 const MUTED_STATE = 'muted';
 
-@Injectable({providedIn: 'root'})
-export class CommentsOnboardingService {
+@Injectable()
+export class OnboardingService<TContext = unknown> {
+    private readonly config = inject(ONBOARDING_CONFIG);
     private readonly mutedState = signal(this.readMutedState());
 
-    public readonly step = signal<CommentsOnboardingStep | null>(null);
-    public readonly selectedProposal = signal<ProposalDto | null>(null);
-    public readonly sidebarOpened = signal(false);
-    public readonly isRunning = computed(() => this.step() !== null);
+    public readonly step = signal(0);
+    public readonly context = signal<TContext | null>(null);
+    public readonly count = this.config.count;
+    public readonly isRunning = computed(() => this.step() > 0);
     public readonly isMuted = this.mutedState.asReadonly();
     public readonly shouldAutoStart = computed(() => !this.mutedState());
-    public readonly currentStepNumber = computed(() => {
-        const currentStep = this.step();
-        const index = currentStep === null ? -1 : COMMENTS_ONBOARDING_STEPS.indexOf(currentStep);
 
-        return index + 1;
-    });
-
-    public readonly stepsCount = COMMENTS_ONBOARDING_STEPS.length;
-
-    public start(proposal: ProposalDto, force = false): boolean {
+    public start(context: TContext, force = false): boolean {
         if (this.mutedState() && !force) {
             return false;
         }
 
-        this.selectedProposal.set(proposal);
-        this.sidebarOpened.set(false);
-        this.step.set(COMMENTS_ONBOARDING_STEPS[0]);
+        this.context.set(context);
+        this.step.set(1);
 
         return true;
     }
 
-    public openSidebar(proposal: ProposalDto): void {
-        this.selectedProposal.set(proposal);
-        this.sidebarOpened.set(true);
-    }
-
     public next(): void {
-        switch (this.step()) {
-            case 'comment-icon':
-                if (this.selectedProposal() === null) {
-                    this.close();
-                    return;
-                }
+        const currentStep = this.step();
 
-                this.sidebarOpened.set(true);
-                this.step.set('comment-tabs');
-                break;
-
-            case 'comment-tabs':
-                this.step.set('justification-checkbox');
-                break;
-
-            case 'justification-checkbox':
-                this.close();
-                break;
-
-            case null:
-                break;
+        if (currentStep === 0) {
+            return;
         }
+
+        if (currentStep >= this.count) {
+            this.close();
+            return;
+        }
+
+        this.step.set(currentStep + 1);
     }
 
     public close(): void {
         this.mute();
     }
 
-    public closeSidebar(): void {
-        this.sidebarOpened.set(false);
-
-        if (this.step() === 'comment-tabs' || this.step() === 'justification-checkbox') {
-            this.close();
-        }
-    }
-
-    public isCommentStepFor(proposalId: number): boolean {
-        return this.step() === 'comment-icon' && this.selectedProposal()?.id === proposalId;
+    public isActive(step: number, context?: TContext): boolean {
+        return (
+            this.step() === step &&
+            (context === undefined || Object.is(this.context(), context))
+        );
     }
 
     private mute(): void {
         try {
-            localStorage.setItem(ONBOARDING_STORAGE_KEY, MUTED_STATE);
+            localStorage.setItem(this.config.storageKey, MUTED_STATE);
         } catch {
             // The tour still closes when storage is unavailable, for example in private mode.
         }
 
         this.mutedState.set(true);
-        this.step.set(null);
+        this.step.set(0);
+        this.context.set(null);
     }
 
     private readMutedState(): boolean {
         try {
-            return localStorage.getItem(ONBOARDING_STORAGE_KEY) === MUTED_STATE;
+            return localStorage.getItem(this.config.storageKey) === MUTED_STATE;
         } catch {
             return false;
         }
