@@ -1,0 +1,23 @@
+<article class="step">
+    <button
+        appearance="icon"
+        aria-label="Закрыть онбординг"
+        class="close"
+        iconStart="@tui.x"
+        size="xs"
+        tuiIconButton
+        type="button"
+        (click)="onboarding.close()"
+    ></button>
+
+    <ng-content select="[onboardingStepTitle]" />
+
+    <div class="content">
+        <ng-content />
+    </div>
+
+    <footer>
+        <span>{{ onboarding.currentStepNumber() }} из {{ onboarding.stepsCount }}</span>
+        <ng-content select="[onboardingStepAction]" />
+    </footer>
+</article>
