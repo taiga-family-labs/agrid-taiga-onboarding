@@ -2,14 +2,14 @@ import {ChangeDetectionStrategy, Component, inject, input, output} from '@angula
 import {TuiButton} from '@taiga-ui/core';
 import {TuiSegmented} from '@taiga-ui/kit';
 
-import {OnboardingHintStepDirective} from '../../onboarding/onboarding-hint-step.directive';
+import {OnboardingStepDirective} from '../../onboarding/onboarding-step.directive';
 import {ProposalDto} from '../../proposal.dto';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {CommentOnboardingService} from '../comment-onboarding/comment-onboarding.service';
 
 @Component({
-    selector: 'app-comments-sidebar',
-    imports: [CommentFormComponent, OnboardingHintStepDirective, TuiButton, TuiSegmented],
+    selector: 'comments-sidebar',
+    imports: [CommentFormComponent, OnboardingStepDirective, TuiButton, TuiSegmented],
     templateUrl: './comments-sidebar.component.html',
     styleUrl: './comments-sidebar.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
