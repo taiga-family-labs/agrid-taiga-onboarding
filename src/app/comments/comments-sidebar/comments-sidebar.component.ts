@@ -1,23 +1,22 @@
-import {ChangeDetectionStrategy, Component, inject, input, output} from '@angular/core';
-import {TuiButton, TuiHint} from '@taiga-ui/core';
-import {TuiTabs} from '@taiga-ui/kit';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {TuiButton} from '@taiga-ui/core';
+import {TuiSegmented} from '@taiga-ui/kit';
 
-import {CommentsOnboardingService} from '../../onboarding/onboarding.service';
+import {OnboardingHintStepDirective} from '../../onboarding/onboarding-hint-step.directive';
 import {COMMENT_TABS_ONBOARDING_STEP} from '../../onboarding/steps/comment-tabs-onboarding-step.component';
 import {ProposalDto} from '../../proposal.dto';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 
 @Component({
     selector: 'app-comments-sidebar',
-    imports: [CommentFormComponent, TuiButton, TuiHint, TuiTabs],
+    imports: [CommentFormComponent, OnboardingHintStepDirective, TuiButton, TuiSegmented],
     templateUrl: './comments-sidebar.component.html',
     styleUrl: './comments-sidebar.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsSidebarComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
     protected readonly onboardingStep = COMMENT_TABS_ONBOARDING_STEP;
-    protected activeTab = 0;
+    protected activeSegment = 0;
 
     public readonly proposal = input.required<ProposalDto>();
     public readonly closed = output<void>();
