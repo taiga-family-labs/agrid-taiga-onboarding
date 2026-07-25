@@ -1,21 +1,20 @@
 import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {TuiButton, TuiHint} from '@taiga-ui/core';
+import {TuiButton, TuiIcon} from '@taiga-ui/core';
 
-import {CommentsOnboardingService} from '../../onboarding/onboarding.service';
-import {JUSTIFICATION_CHECKBOX_ONBOARDING_STEP} from '../../onboarding/steps/justification-checkbox-onboarding-step.component';
+import {OnboardingHintStepDirective} from '../../onboarding/onboarding-hint-step.directive';
 import {ProposalDto} from '../../proposal.dto';
+import {CommentOnboardingService} from '../comment-onboarding/comment-onboarding.service';
 
 @Component({
     selector: 'app-comment-form',
-    imports: [FormsModule, TuiButton, TuiHint],
+    imports: [FormsModule, OnboardingHintStepDirective, TuiButton, TuiIcon],
     templateUrl: './comment-form.component.html',
     styleUrl: './comment-form.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentFormComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
-    protected readonly onboardingStep = JUSTIFICATION_CHECKBOX_ONBOARDING_STEP;
+    protected readonly commentOnboarding = inject(CommentOnboardingService);
     protected comment = '';
     protected isJustification = false;
 
