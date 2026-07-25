@@ -21,6 +21,13 @@
 button {
     position: relative;
     flex: 0 0 auto;
+
+    &.active-anchor {
+        z-index: 901;
+        outline: 2px solid #6aa5ff;
+        outline-offset: 3px;
+        background: #fff;
+    }
 }
 
 tui-pulse {
