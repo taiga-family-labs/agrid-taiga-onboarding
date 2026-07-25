@@ -39,7 +39,7 @@
             </section>
 
             @if (sidebar.proposal(); as proposal) {
-                <app-comments-sidebar
+                <comments-sidebar
                     [proposal]="proposal"
                     (closed)="closeSidebar()"
                 />
