@@ -98,8 +98,21 @@
 }
 
 .active-anchor {
+    position: relative;
+    z-index: 901;
     outline: 2px solid #6aa5ff;
     outline-offset: 3px;
+    background: #fff;
+}
+
+.onboarding-backdrop {
+    position: fixed;
+    z-index: 900;
+    inset: 0;
+    cursor: default;
+    background: rgb(12 19 32 / 42%);
+    overscroll-behavior: contain;
+    touch-action: none;
 }
 
 .comments-empty {
