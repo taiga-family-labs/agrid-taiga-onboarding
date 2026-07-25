@@ -32,6 +32,7 @@
                     [defaultColDef]="defaultColDef"
                     [rowData]="rowData"
                     [rowHeight]="48"
+                    (firstDataRendered)="onFirstDataRendered()"
                     (gridReady)="onGridReady($event)"
                 />
             </section>
@@ -139,4 +140,11 @@
             }
         </div>
     </main>
+
+    @if (onboarding.isRunning()) {
+        <div
+            aria-hidden="true"
+            class="onboarding-backdrop"
+        ></div>
+    }
 </tui-root>
