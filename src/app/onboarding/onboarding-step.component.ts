@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {TuiButton} from '@taiga-ui/core';
 
-import {CommentsOnboardingService} from './onboarding.service';
+import {OnboardingService} from './onboarding.service';
 
 @Component({
     selector: 'app-onboarding-step',
@@ -11,5 +11,5 @@ import {CommentsOnboardingService} from './onboarding.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OnboardingStepComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
+    protected readonly onboarding = inject(OnboardingService);
 }
