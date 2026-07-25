@@ -14,17 +14,23 @@
 ### Общая инфраструктура
 
 - `OnboardingService` регистрирует и удаляет независимые onboarding-flow.
-- `OnboardingHintStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`.
-- `OnboardingStepComponent` задает общий layout шага и использует content projection.
+- `Onboarding` представляет одну зарегистрированную последовательность.
+- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`.
+- стили anchor и overlay подключаются самой директивой через `tuiWithStyles`;
+- `OnboardingStepComponent` задает общий layout шага и использует content projection;
+- интерфейсы и типы вынесены в `onboarding.types.ts`.
 
 ### Онбординг комментариев
 
-- `CommentOnboardingService` регистрирует три шага, хранит целый `ProposalDto` как context и связывает первый переход с открытием сайдбара.
-- Содержимое шагов находится в `comments/comment-onboarding/comment-onboarding-steps`.
-- Каждый шаг передается в Taiga UI как `PolymorpheusComponent`.
-- При уничтожении feature-сервиса регистрация автоматически удаляется.
+- `CommentOnboardingService` регистрирует три шага;
+- шаги представлены типизированным immutable tuple `steps`;
+- содержимое находится в `comments/comment-onboarding/comment-onboarding-steps`;
+- файлы шагов называются `one-step`, `two-step` и `third-step`;
+- каждый шаг передается в Taiga UI как `PolymorpheusComponent`;
+- открытие сайдбара объявлено рядом с anchor через `(onboardingStepOnNext)`;
+- при уничтожении feature-сервиса регистрация автоматически удаляется.
 
-После удаления временного онбординга общие `OnboardingService`, `OnboardingHintStepDirective` и `OnboardingStepComponent` остаются для следующих сценариев. Нужно удалить только feature-provider, три anchor-binding и директорию `comments/comment-onboarding`.
+После удаления временного онбординга общие `OnboardingService`, `OnboardingStepDirective` и `OnboardingStepComponent` остаются для следующих сценариев. Нужно удалить только feature-provider, три `[onboardingStep]` binding и директорию `comments/comment-onboarding`.
 
 ## Локальный запуск
 
@@ -38,14 +44,14 @@ npm start
 Для повторной проверки первого посещения:
 
 ```js
-localStorage.removeItem('agrid-taiga-onboarding:comments:v1');
+localStorage.removeItem('@onboarding.comment-triggers.1');
 location.reload();
 ```
 
 ## Поведение
 
-1. Первый шаг привязан к иконке комментария выбранной заявки в AG Grid.
-2. Кнопка `Далее` открывает широкий сайдбар с целым `ProposalDto`.
+1. Первый шаг привязан к иконке комментария первой доступной заявки в AG Grid.
+2. Кнопка `Далее` вызывает `(onboardingStepOnNext)` и открывает широкий сайдбар с целым `ProposalDto`.
 3. Второй шаг привязан к `tui-segmented`.
 4. Третий шаг привязан к контролу `Учитывать как обоснование`.
 5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
