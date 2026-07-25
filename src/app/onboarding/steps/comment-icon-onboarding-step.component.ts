@@ -2,8 +2,10 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {TuiButton, TuiTitle} from '@taiga-ui/core';
 import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
 
+import {CommentsSidebarService} from '../../comments/comments-sidebar/comments-sidebar.service';
+import {ProposalDto} from '../../proposal.dto';
 import {OnboardingStepComponent} from '../onboarding-step.component';
-import {CommentsOnboardingService} from '../onboarding.service';
+import {OnboardingService} from '../onboarding.service';
 
 @Component({
     selector: 'app-comment-icon-onboarding-step',
@@ -30,7 +32,7 @@ import {CommentsOnboardingService} from '../onboarding.service';
                 size="s"
                 tuiButton
                 type="button"
-                (click)="onboarding.next()"
+                (click)="next()"
             >
                 Далее
             </button>
@@ -69,13 +71,26 @@ import {CommentsOnboardingService} from '../onboarding.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentIconOnboardingStepComponent {
-    protected readonly onboarding = inject(CommentsOnboardingService);
+    private readonly sidebar = inject(CommentsSidebarService);
+    protected readonly onboarding = inject<OnboardingService<ProposalDto>>(OnboardingService);
     protected readonly names = [
         'Анна Агафонова',
         'Николай Арсеньев',
         'Олег Володин',
         'Татьяна Воробьева',
     ];
+
+    protected next(): void {
+        const proposal = this.onboarding.context();
+
+        if (proposal === null) {
+            this.onboarding.close();
+            return;
+        }
+
+        this.sidebar.open(proposal);
+        this.onboarding.next();
+    }
 }
 
 export const COMMENT_ICON_ONBOARDING_STEP = new PolymorpheusComponent(
