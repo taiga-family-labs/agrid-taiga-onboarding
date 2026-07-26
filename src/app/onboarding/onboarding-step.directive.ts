@@ -60,7 +60,7 @@ export class OnboardingStepDirective {
     private readonly onboarding = inject(OnboardingService);
 
     public readonly step = input<OnboardingStep | null>(null, {alias: 'onboardingStep'});
-    public readonly direction = input<TuiHintDirection>('bottom', {
+    public readonly direction = input<TuiHintDirection>('left', {
         alias: 'onboardingStepDirection',
     });
     public readonly onNext = output<void>({alias: 'onboardingStepOnNext'});
