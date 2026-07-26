@@ -16,6 +16,7 @@ import {COMMENT_ONBOARDING} from '../comment-onboarding/comment-onboarding.provi
 })
 export class CommentsSidebarComponent {
     protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
+    protected readonly onboardingStep = this.commentOnboarding?.steps[1] ?? null;
     protected activeSegment = 0;
 
     public readonly proposal = input.required<ProposalDto>();
