@@ -13,6 +13,7 @@ import {CommentOnboardingService} from './comments/comment-onboarding/comment-on
 import {CommentsSidebarComponent} from './comments/comments-sidebar/comments-sidebar.component';
 import {CommentsSidebarService} from './comments/comments-sidebar/comments-sidebar.service';
 import {PROPOSALS} from './data/proposals';
+import {FeatureFlagsService} from './feature-flags.service';
 import {EmployeeCellComponent} from './grid/employee-cell.component';
 import {OnboardingService} from './onboarding/onboarding.service';
 import {ProposalDto} from './proposal.dto';
@@ -28,6 +29,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+    protected readonly featureFlags = inject(FeatureFlagsService);
     protected readonly onboarding = inject(OnboardingService);
     protected readonly commentOnboarding = inject(CommentOnboardingService);
     protected readonly sidebar = inject(CommentsSidebarService);
@@ -70,6 +72,14 @@ export class AppComponent {
 
         this.autoStartAttempted = true;
         this.startTour(false);
+    }
+
+    protected setCommentsOnboardingEnabled(event: Event): void {
+        const target = event.target;
+
+        if (target instanceof HTMLInputElement) {
+            this.featureFlags.setEnableCommentsOnboarding(target.checked);
+        }
     }
 
     protected startTour(resetMutedState = true): void {
