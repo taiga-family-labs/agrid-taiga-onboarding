@@ -1,6 +1,8 @@
-import {computed, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {WA_LOCAL_STORAGE} from '@ng-web-apis/common';
 import {type PolymorpheusContent} from '@taiga-ui/polymorpheus';
 
+import {assert} from '../utils/assert';
 import {Onboarding} from './onboarding';
 import {
     type OnboardingAnchor,
@@ -19,6 +21,7 @@ interface RegisteredOnboarding {
 
 @Injectable({providedIn: 'root'})
 export class OnboardingService {
+    private readonly localStorage = inject(WA_LOCAL_STORAGE);
     private readonly registrations = new Map<string, RegisteredOnboarding>();
     private readonly anchors = new Map<string, OnboardingAnchor[]>();
     private readonly activeId = signal<string | null>(null);
@@ -32,19 +35,20 @@ export class OnboardingService {
     public register<const TSteps extends readonly PolymorpheusContent[]>(
         options: OnboardingOptions<TSteps>,
     ): Onboarding<TSteps> {
-        if (this.registrations.has(options.id)) {
-            throw new Error(`Onboarding "${options.id}" is already registered`);
-        }
-
-        if (options.steps.length === 0) {
-            throw new Error(`Onboarding "${options.id}" must contain at least one step`);
-        }
+        assert(
+            !this.registrations.has(options.id),
+            `Onboarding "${options.id}" is already registered`,
+        );
+        assert(
+            options.steps.length > 0,
+            `Onboarding "${options.id}" must contain at least one step`,
+        );
 
         const version = options.version ?? DEFAULT_VERSION;
 
         this.registrations.set(options.id, {
             id: options.id,
-            storageKey: `@onboarding.${options.id}.${version}`,
+            storageKey: `@onboarding.${options.id}.v${version}`,
             steps: options.steps,
         });
 
@@ -129,10 +133,18 @@ export class OnboardingService {
         const definition = this.registrations.get(activeId);
 
         if (definition) {
-            localStorage.setItem(definition.storageKey, MUTED_STATE);
+            this.localStorage.setItem(definition.storageKey, MUTED_STATE);
         }
 
         this.reset();
+    }
+
+    public clearMutedState(onboardingId: string): void {
+        const definition = this.registrations.get(onboardingId);
+
+        if (definition) {
+            this.localStorage.removeItem(definition.storageKey);
+        }
     }
 
     public unregister(onboardingId: string): void {
@@ -152,8 +164,8 @@ export class OnboardingService {
     public shouldAutoStart(onboardingId: string): boolean {
         const definition = this.registrations.get(onboardingId);
 
-        return Boolean(
-            definition && localStorage.getItem(definition.storageKey) !== MUTED_STATE,
+        return (
+            !!definition && this.localStorage.getItem(definition.storageKey) !== MUTED_STATE
         );
     }
 
