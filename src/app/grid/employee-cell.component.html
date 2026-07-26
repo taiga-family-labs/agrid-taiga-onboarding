@@ -5,7 +5,11 @@
         appearance="flat"
         onboardingStepDirection="right"
         [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
-        [onboardingStep]="commentOnboarding.isTarget(proposal) ? commentOnboarding.steps()[0] : null"
+        [onboardingStep]="
+            commentOnboarding?.isTarget(proposal)
+                ? commentOnboarding?.steps[0] ?? null
+                : null
+        "
         iconStart="@tui.message-square"
         size="xs"
         tuiIconButton
