@@ -47,19 +47,10 @@ export class CommentOnboardingService {
         return started;
     }
 
-    public isTarget(proposal: ProposalDto): boolean {
-        return this.targetProposal()?.id === proposal.id;
-    }
-
-    public next(): void {
-        this.onboarding.next();
-    }
-
-    public close(): void {
-        this.onboarding.close();
-    }
-
-    public canStart(): boolean {
-        return this.onboarding.canStart();
+    public isFirstStepTarget(proposal: ProposalDto): boolean {
+        return (
+            this.onboarding.isActive(this.steps[0]) &&
+            this.targetProposal()?.id === proposal.id
+        );
     }
 }
