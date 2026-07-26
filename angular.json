@@ -19,6 +19,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "assets": [
+              "src/config.json",
               {
                 "glob": "**/*",
                 "input": "node_modules/@taiga-ui/icons/src",
