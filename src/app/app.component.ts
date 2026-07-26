@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
     selector: 'onboarding-demo',
     imports: [AgGridAngular, CommentsSidebarComponent, TuiButton, TuiRoot, TuiTitle],
-    providers: [...provideCommentOnboarding(), CommentsSidebarService],
+    providers: [provideCommentOnboarding(), CommentsSidebarService],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
