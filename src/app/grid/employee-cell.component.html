@@ -6,7 +6,7 @@
         onboardingStepDirection="right"
         [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
         [onboardingStep]="
-            commentOnboarding?.isTarget(proposal)
+            commentOnboarding?.isFirstStepTarget(proposal)
                 ? onboardingStep
                 : null
         "
