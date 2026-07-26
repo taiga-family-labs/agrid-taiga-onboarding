@@ -7,7 +7,6 @@ export interface OnboardingOptions<TSteps extends readonly PolymorpheusContent[]
 }
 
 export interface OnboardingStep {
-    readonly onboardingId: string;
     readonly index: number;
     readonly content: PolymorpheusContent;
 }
