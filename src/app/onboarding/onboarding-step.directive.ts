@@ -67,8 +67,7 @@ class OnboardingStyles {}
 export class OnboardingStepDirective {
     private readonly onboarding = inject(OnboardingService);
 
-    public readonly step = input.required<OnboardingStep>({alias: 'onboardingStep'});
-    public readonly enabled = input(true, {alias: 'onboardingStepEnabled'});
+    public readonly step = input<OnboardingStep | null>(null, {alias: 'onboardingStep'});
     public readonly direction = input<TuiHintDirection>('bottom', {
         alias: 'onboardingStepDirection',
     });
@@ -78,18 +77,22 @@ export class OnboardingStepDirective {
         onNext: () => this.onNext.emit(),
     };
 
-    protected readonly active = computed(
-        () => this.enabled() && this.onboarding.isActive(this.step(), this.anchor),
-    );
+    protected readonly active = computed(() => {
+        const step = this.step();
+
+        return step !== null && this.onboarding.isActive(step, this.anchor);
+    });
 
     protected readonly styles = tuiWithStyles(OnboardingStyles);
 
     protected readonly registration = effect((onCleanup) => {
-        if (!this.enabled()) {
+        const step = this.step();
+
+        if (step === null) {
             return;
         }
 
-        const unregister = this.onboarding.registerAnchor(this.step(), this.anchor);
+        const unregister = this.onboarding.registerAnchor(step, this.anchor);
 
         onCleanup(unregister);
     });
@@ -97,7 +100,7 @@ export class OnboardingStepDirective {
     protected readonly content = tuiDirectiveBinding(
         TuiHintDirective,
         'content',
-        computed(() => this.step().content),
+        computed(() => this.step()?.content ?? null),
     );
 
     protected readonly appearance = tuiDirectiveBinding(
