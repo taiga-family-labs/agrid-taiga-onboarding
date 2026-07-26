@@ -1,4 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    ViewEncapsulation,
+} from '@angular/core';
 import {TuiButton} from '@taiga-ui/core';
 
 import {OnboardingService} from './onboarding.service';
@@ -8,6 +13,7 @@ import {OnboardingService} from './onboarding.service';
     imports: [TuiButton],
     templateUrl: './onboarding-step.component.html',
     styleUrl: './onboarding-step.component.less',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OnboardingStepComponent {
