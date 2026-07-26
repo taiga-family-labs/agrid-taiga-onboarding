@@ -105,7 +105,7 @@ export class OnboardingService {
         this.registration = null;
     }
 
-    public canStart(): boolean {
+    private canStart(): boolean {
         return (
             this.registration !== null &&
             this.localStorage.getItem(this.registration.storageKey) !== MUTED_STATE
