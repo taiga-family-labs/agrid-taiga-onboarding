@@ -20,6 +20,7 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
     protected readonly sidebar = inject(CommentsSidebarService);
     protected readonly onboarding = inject(OnboardingService);
     protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
+    protected readonly onboardingStep = this.commentOnboarding?.steps[0] ?? null;
     protected proposal!: ProposalDto;
 
     public agInit(params: ICellRendererParams<ProposalDto>): void {
@@ -36,12 +37,12 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
 
     protected openComments(): void {
         const commentOnboarding = this.commentOnboarding;
-        const firstStep = commentOnboarding?.steps[0];
+        const step = this.onboardingStep;
 
         if (
-            firstStep &&
-            commentOnboarding.isTarget(this.proposal) &&
-            this.onboarding.isActive(firstStep)
+            step &&
+            commentOnboarding?.isTarget(this.proposal) &&
+            this.onboarding.isActive(step)
         ) {
             commentOnboarding.next();
             return;
