@@ -3,10 +3,8 @@ import {
     Component,
     computed,
     Directive,
-    effect,
     inject,
     input,
-    output,
     ViewEncapsulation,
 } from '@angular/core';
 import {tuiDirectiveBinding, tuiWithStyles} from '@taiga-ui/cdk';
@@ -18,10 +16,7 @@ import {
 } from '@taiga-ui/core';
 
 import {OnboardingService} from './onboarding.service';
-import {
-    type OnboardingAnchor,
-    type OnboardingStep,
-} from './onboarding.types';
+import {type OnboardingStep} from './onboarding.types';
 
 @Component({
     standalone: true,
@@ -63,31 +58,14 @@ export class OnboardingStepDirective {
     public readonly direction = input<TuiHintDirection>('left', {
         alias: 'onboardingStepDirection',
     });
-    public readonly onNext = output<void>({alias: 'onboardingStepOnNext'});
-
-    private readonly anchor: OnboardingAnchor = {
-        onNext: () => this.onNext.emit(),
-    };
 
     protected readonly active = computed(() => {
         const step = this.step();
 
-        return step !== null && this.onboarding.isActive(step, this.anchor);
+        return step !== null && this.onboarding.isActive(step);
     });
 
     protected readonly styles = tuiWithStyles(OnboardingAnchorStyles);
-
-    protected readonly registration = effect((onCleanup) => {
-        const step = this.step();
-
-        if (step === null) {
-            return;
-        }
-
-        const unregister = this.onboarding.registerAnchor(step, this.anchor);
-
-        onCleanup(unregister);
-    });
 
     protected readonly content = tuiDirectiveBinding(
         TuiHintDirective,
