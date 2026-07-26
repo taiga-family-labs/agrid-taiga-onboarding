@@ -4,7 +4,7 @@ import {TuiButton, TuiIcon} from '@taiga-ui/core';
 
 import {OnboardingStepDirective} from '../../onboarding/onboarding-step.directive';
 import {ProposalDto} from '../../proposal.dto';
-import {CommentOnboardingService} from '../comment-onboarding/comment-onboarding.service';
+import {COMMENT_ONBOARDING} from '../comment-onboarding/comment-onboarding.provider';
 
 @Component({
     selector: 'comment-form',
@@ -14,7 +14,7 @@ import {CommentOnboardingService} from '../comment-onboarding/comment-onboarding
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentFormComponent {
-    protected readonly commentOnboarding = inject(CommentOnboardingService);
+    protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
     protected comment = '';
     protected isJustification = false;
 
