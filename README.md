@@ -13,14 +13,15 @@
 
 ### Общая инфраструктура
 
-- `OnboardingService` регистрирует и удаляет независимые onboarding-flow.
-- `Onboarding` представляет одну зарегистрированную последовательность.
-- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`.
+- `OnboardingService` регистрирует и удаляет независимые onboarding-flow;
+- `Onboarding` представляет одну зарегистрированную последовательность;
+- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`;
 - стили anchor и overlay подключаются самой директивой через `tuiWithStyles`;
 - `OnboardingStepComponent` задает общий layout шага и использует content projection;
-- интерфейсы и типы вынесены в `onboarding.types.ts`.
+- интерфейсы и типы вынесены в `onboarding.types.ts`;
+- проверки инвариантов выполняются общей утилитой `assert`.
 
-`id` нужен для идентификации зарегистрированного flow, изоляции его шагов и построения ключа `localStorage`. Ключ формируется по шаблону `@onboarding.{id}.{version}`, где `version` по умолчанию равна `1`.
+`id` нужен для идентификации зарегистрированного flow, изоляции его шагов и построения ключа `localStorage`. Ключ формируется по шаблону `@onboarding.{id}.v{version}`, где `version` по умолчанию равна `1`.
 
 ### Онбординг комментариев
 
@@ -46,7 +47,7 @@ npm start
 Для повторной проверки первого посещения:
 
 ```js
-localStorage.removeItem('@onboarding.comment-triggers.1');
+localStorage.removeItem('@onboarding.comment-triggers.v1');
 location.reload();
 ```
 
@@ -54,12 +55,12 @@ location.reload();
 
 1. Первый шаг привязан к иконке комментария первой доступной заявки в AG Grid.
 2. Кнопка `Далее` вызывает `(onboardingStepOnNext)` и открывает широкий сайдбар с целым `ProposalDto`.
-3. Второй шаг привязан к `tui-segmented`.
+3. Второй шаг привязан к обертке вокруг `tui-segmented`, чтобы внутренняя `mask-image` Taiga UI не обрезала внешнюю обводку.
 4. Третий шаг привязан к контролу `Учитывать как обоснование`.
 5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
 6. `Escape` не закрывает онбординг.
 7. Прозрачный backdrop блокирует интерфейс под текущим шагом.
-8. Кнопка `Запустить онбординг` принудительно запускает демонстрацию повторно.
+8. Кнопка `Запустить онбординг` удаляет mute-ключ и запускает сценарий через обычную проверку `shouldAutoStart`.
 
 ## Production build
 
