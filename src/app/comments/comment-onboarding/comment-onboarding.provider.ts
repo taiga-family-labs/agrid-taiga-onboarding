@@ -7,7 +7,7 @@ export const COMMENT_ONBOARDING = new InjectionToken<CommentOnboardingService | 
     '[COMMENT_ONBOARDING]: CommentOnboardingService',
 );
 
-export function provideCommentOnboarding(): Provider[] {
+export function provideCommentOnboarding(): Provider {
     return [
         CommentOnboardingService,
         {
