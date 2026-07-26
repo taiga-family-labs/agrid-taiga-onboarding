@@ -30,6 +30,10 @@ export class CommentOnboardingService {
         this.ref.close();
     }
 
+    public clearMutedState(): void {
+        this.ref.clearMutedState();
+    }
+
     public shouldAutoStart(): boolean {
         return this.ref.shouldAutoStart();
     }
