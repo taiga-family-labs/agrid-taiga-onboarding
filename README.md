@@ -13,13 +13,12 @@
 
 ### Общая инфраструктура
 
-- `OnboardingService` регистрирует и удаляет независимые onboarding-flow;
-- `Onboarding` представляет одну зарегистрированную последовательность;
-- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`;
+- `OnboardingService` регистрирует и удаляет независимые onboarding-flow.
+- `Onboarding` представляет одну зарегистрированную последовательность.
+- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`.
 - стили anchor и overlay подключаются самой директивой через `tuiWithStyles`;
 - `OnboardingStepComponent` задает общий layout шага и использует content projection;
-- интерфейсы и типы вынесены в `onboarding.types.ts`;
-- проверки инвариантов выполняются общей утилитой `assert`.
+- интерфейсы и типы вынесены в `onboarding.types.ts`.
 
 `id` нужен для идентификации зарегистрированного flow, изоляции его шагов и построения ключа `localStorage`. Ключ формируется по шаблону `@onboarding.{id}.v{version}`, где `version` по умолчанию равна `1`.
 
@@ -31,6 +30,7 @@
 - файлы шагов называются `one-step`, `two-step` и `third-step`;
 - каждый шаг передается в Taiga UI как `PolymorpheusComponent`;
 - открытие сайдбара объявлено рядом с anchor через `(onboardingStepOnNext)`;
+- первый шаг регистрируется только для выбранного `ProposalDto`, а не для каждой строки AG Grid;
 - при уничтожении feature-сервиса регистрация автоматически удаляется.
 
 После удаления временного онбординга общие `OnboardingService`, `OnboardingStepDirective` и `OnboardingStepComponent` остаются для следующих сценариев. Нужно удалить только feature-provider, три `[onboardingStep]` binding и директорию `comments/comment-onboarding`.
@@ -53,14 +53,14 @@ location.reload();
 
 ## Поведение
 
-1. Первый шаг привязан к иконке комментария первой доступной заявки в AG Grid.
+1. Первый шаг привязан к иконке комментария выбранной заявки в AG Grid.
 2. Кнопка `Далее` вызывает `(onboardingStepOnNext)` и открывает широкий сайдбар с целым `ProposalDto`.
-3. Второй шаг привязан к обертке вокруг `tui-segmented`, чтобы внутренняя `mask-image` Taiga UI не обрезала внешнюю обводку.
+3. Второй шаг привязан к `tui-segmented`.
 4. Третий шаг привязан к контролу `Учитывать как обоснование`.
 5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
 6. `Escape` не закрывает онбординг.
 7. Прозрачный backdrop блокирует интерфейс под текущим шагом.
-8. Кнопка `Запустить онбординг` удаляет mute-ключ и запускает сценарий через обычную проверку `shouldAutoStart`.
+8. Кнопка `Запустить онбординг` сбрасывает mute-состояние и запускает демонстрацию повторно.
 
 ## Production build
 
