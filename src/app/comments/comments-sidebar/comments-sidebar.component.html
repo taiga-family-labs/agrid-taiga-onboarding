@@ -18,20 +18,16 @@
         <strong>{{ proposal().employeeFullName }}</strong>
     </div>
 
-    <div
-        class="segments-anchor"
+    <tui-segmented
         onboardingStepDirection="left"
+        size="m"
         [onboardingStep]="commentOnboarding.steps()[1]"
+        [(activeItemIndex)]="activeSegment"
     >
-        <tui-segmented
-            size="m"
-            [(activeItemIndex)]="activeSegment"
-        >
-            <button type="button">Все</button>
-            <button type="button">Обоснования</button>
-            <button type="button">Другие комментарии</button>
-        </tui-segmented>
-    </div>
+        <button type="button">Все</button>
+        <button type="button">Обоснования</button>
+        <button type="button">Другие комментарии</button>
+    </tui-segmented>
 
     <section class="comments-empty">
         <div class="empty-icon">✦</div>
