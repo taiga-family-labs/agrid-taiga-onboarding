@@ -27,23 +27,13 @@ import {
     standalone: true,
     template: '',
     styles: `
-        .onboarding-active-anchor {
+        .onboarding-step-anchor._active {
             position: relative;
             z-index: 1;
             box-shadow:
                 0 0 0 2px #6aa5ff,
                 0 0 0 4px #fff,
                 0 0 0 6px #b5d2ff;
-        }
-
-        onboarding-step footer [tuiButton] {
-            min-inline-size: 5.75rem;
-            background: #fff;
-            color: #303744;
-        }
-
-        onboarding-step footer [tuiButton]:hover {
-            background: #f2f5fa !important;
         }
 
         tui-hint[data-appearance='onboarding'] {
@@ -55,13 +45,14 @@ import {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class OnboardingStyles {}
+class OnboardingAnchorStyles {}
 
 @Directive({
     selector: '[onboardingStep]',
     hostDirectives: [TuiHintDirective, TuiHintManual],
     host: {
-        '[class.onboarding-active-anchor]': 'active()',
+        class: 'onboarding-step-anchor',
+        '[class._active]': 'active()',
     },
 })
 export class OnboardingStepDirective {
@@ -83,7 +74,7 @@ export class OnboardingStepDirective {
         return step !== null && this.onboarding.isActive(step, this.anchor);
     });
 
-    protected readonly styles = tuiWithStyles(OnboardingStyles);
+    protected readonly styles = tuiWithStyles(OnboardingAnchorStyles);
 
     protected readonly registration = effect((onCleanup) => {
         const step = this.step();
