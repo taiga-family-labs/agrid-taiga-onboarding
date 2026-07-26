@@ -35,7 +35,10 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
     }
 
     protected openComments(): void {
-        if (this.onboarding.isActive(this.commentOnboarding.steps[0])) {
+        if (
+            this.commentOnboarding.isTarget(this.proposal) &&
+            this.onboarding.isActive(this.commentOnboarding.steps[0])
+        ) {
             this.commentOnboarding.next();
             return;
         }
