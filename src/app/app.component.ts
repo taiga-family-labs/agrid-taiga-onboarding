@@ -75,14 +75,14 @@ export class AppComponent {
         this.startTour();
     }
 
-    protected startTour(force = false): void {
+    protected startTour(ignoreMuted = false): void {
         const proposal = this.rowData[0];
         const commentOnboarding = this.commentOnboarding;
 
         if (
             !proposal ||
             commentOnboarding === null ||
-            (!force && !commentOnboarding.shouldAutoStart())
+            (!ignoreMuted && !commentOnboarding.canStart())
         ) {
             return;
         }
@@ -94,7 +94,7 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        commentOnboarding.start(proposal, force);
+        commentOnboarding.start(proposal, ignoreMuted);
     }
 
     protected closeSidebar(): void {
