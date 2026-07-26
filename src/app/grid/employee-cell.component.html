@@ -1,0 +1,19 @@
+<div class="employee-cell">
+    <span class="name">{{ proposal.employeeFullName }}</span>
+
+    <button
+        appearance="flat"
+        onboardingStepDirection="right"
+        [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
+        [onboardingStep]="
+            commentOnboarding?.isFirstStepTarget(proposal)
+                ? onboardingStep
+                : null
+        "
+        iconStart="@tui.message-square"
+        size="xs"
+        tuiIconButton
+        type="button"
+        (click)="openComments()"
+    ></button>
+</div>
