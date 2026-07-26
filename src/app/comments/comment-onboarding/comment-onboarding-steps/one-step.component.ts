@@ -10,7 +10,7 @@ import {OnboardingService} from '../../../onboarding/onboarding.service';
     imports: [OnboardingStepComponent, TuiButton, TuiTitle],
     template: `
         <onboarding-step>
-            <h3 onboardingStepTitle tuiTitle>
+            <h3 tuiTitle>
                 Обоснования переехали
                 <span tuiSubtitle>По иконке комментария теперь можно увидеть и отклонения по заявке</span>
             </h3>
@@ -25,7 +25,6 @@ import {OnboardingService} from '../../../onboarding/onboarding.service';
             </div>
 
             <button
-                onboardingStepAction
                 appearance="flat"
                 size="s"
                 tuiButton
