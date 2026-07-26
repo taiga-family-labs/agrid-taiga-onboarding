@@ -71,7 +71,7 @@ export class AppComponent {
         }
 
         this.autoStartAttempted = true;
-        this.startTour(false);
+        this.startTour();
     }
 
     protected setCommentsOnboardingEnabled(event: Event): void {
@@ -82,14 +82,10 @@ export class AppComponent {
         }
     }
 
-    protected startTour(resetMutedState = true): void {
+    protected startTour(force = false): void {
         const proposal = this.rowData[0];
 
-        if (resetMutedState) {
-            this.commentOnboarding.clearMutedState();
-        }
-
-        if (!proposal || !this.commentOnboarding.shouldAutoStart()) {
+        if (!proposal || (!force && !this.commentOnboarding.shouldAutoStart())) {
             return;
         }
 
@@ -100,7 +96,7 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        this.commentOnboarding.start(proposal);
+        this.commentOnboarding.start(proposal, force);
     }
 
     protected closeSidebar(): void {
