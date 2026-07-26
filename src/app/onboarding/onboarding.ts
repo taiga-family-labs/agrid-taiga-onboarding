@@ -34,6 +34,10 @@ export class Onboarding<TSteps extends readonly PolymorpheusContent[]> {
         this.service.close(this.id);
     }
 
+    public clearMutedState(): void {
+        this.service.clearMutedState(this.id);
+    }
+
     public shouldAutoStart(): boolean {
         return this.service.shouldAutoStart(this.id);
     }
