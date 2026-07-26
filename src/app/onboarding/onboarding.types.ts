@@ -1,20 +1,24 @@
 import {type PolymorpheusContent} from '@taiga-ui/polymorpheus';
 
-export interface OnboardingOptions<TSteps extends readonly PolymorpheusContent[]> {
+export interface OnboardingStepDefinition {
+    readonly content: PolymorpheusContent;
+    readonly onNext?: () => void;
+}
+
+export interface OnboardingOptions<
+    TSteps extends readonly OnboardingStepDefinition[],
+> {
     readonly id: string;
     readonly version?: number;
     readonly steps: TSteps;
 }
 
-export interface OnboardingStep {
+export interface OnboardingStep extends OnboardingStepDefinition {
     readonly index: number;
-    readonly content: PolymorpheusContent;
 }
 
-export interface OnboardingAnchor {
-    readonly onNext: () => void;
-}
-
-export type OnboardingSteps<TSteps extends readonly PolymorpheusContent[]> = {
+export type OnboardingSteps<
+    TSteps extends readonly OnboardingStepDefinition[],
+> = {
     readonly [K in keyof TSteps]: OnboardingStep;
 };
