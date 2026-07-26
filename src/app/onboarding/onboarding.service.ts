@@ -24,6 +24,7 @@ export class OnboardingService {
     private readonly localStorage = inject(WA_LOCAL_STORAGE);
     private readonly registrations = new Map<string, RegisteredOnboarding>();
     private readonly anchors = new Map<string, OnboardingAnchor[]>();
+    private readonly anchorsRevision = signal(0);
     private readonly activeId = signal<string | null>(null);
 
     public readonly step = signal(0);
@@ -61,6 +62,7 @@ export class OnboardingService {
 
         anchors.push(anchor);
         this.anchors.set(key, anchors);
+        this.anchorsRevision.update((revision) => revision + 1);
 
         return () => {
             const registered = this.anchors.get(key)?.filter((item) => item !== anchor) ?? [];
@@ -70,10 +72,14 @@ export class OnboardingService {
             } else {
                 this.anchors.delete(key);
             }
+
+            this.anchorsRevision.update((revision) => revision + 1);
         };
     }
 
     public isActive(step: OnboardingStep, anchor?: OnboardingAnchor): boolean {
+        this.anchorsRevision();
+
         if (this.activeId() !== step.onboardingId || this.step() !== step.index) {
             return false;
         }
@@ -154,10 +160,17 @@ export class OnboardingService {
 
         this.registrations.delete(onboardingId);
 
+        let anchorsRemoved = false;
+
         for (const key of this.anchors.keys()) {
             if (key.startsWith(`${onboardingId}:`)) {
                 this.anchors.delete(key);
+                anchorsRemoved = true;
             }
+        }
+
+        if (anchorsRemoved) {
+            this.anchorsRevision.update((revision) => revision + 1);
         }
     }
 
