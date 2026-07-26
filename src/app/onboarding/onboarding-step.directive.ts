@@ -27,7 +27,7 @@ import {
     standalone: true,
     template: '',
     styles: `
-        [onboardingActiveAnchor] {
+        .onboarding-active-anchor {
             position: relative;
             z-index: 1;
             box-shadow:
@@ -61,13 +61,14 @@ class OnboardingStyles {}
     selector: '[onboardingStep]',
     hostDirectives: [TuiHintDirective, TuiHintManual],
     host: {
-        '[attr.onboardingActiveAnchor]': 'active() ? "" : null',
+        '[class.onboarding-active-anchor]': 'active()',
     },
 })
 export class OnboardingStepDirective {
     private readonly onboarding = inject(OnboardingService);
 
     public readonly step = input.required<OnboardingStep>({alias: 'onboardingStep'});
+    public readonly enabled = input(true, {alias: 'onboardingStepEnabled'});
     public readonly direction = input<TuiHintDirection>('bottom', {
         alias: 'onboardingStepDirection',
     });
@@ -77,13 +78,17 @@ export class OnboardingStepDirective {
         onNext: () => this.onNext.emit(),
     };
 
-    protected readonly active = computed(() =>
-        this.onboarding.isActive(this.step(), this.anchor),
+    protected readonly active = computed(
+        () => this.enabled() && this.onboarding.isActive(this.step(), this.anchor),
     );
 
     protected readonly styles = tuiWithStyles(OnboardingStyles);
 
     protected readonly registration = effect((onCleanup) => {
+        if (!this.enabled()) {
+            return;
+        }
+
         const unregister = this.onboarding.registerAnchor(this.step(), this.anchor);
 
         onCleanup(unregister);
