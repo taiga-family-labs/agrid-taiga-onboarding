@@ -106,7 +106,7 @@ export class AppComponent {
     protected closeSidebar(): void {
         this.sidebar.close();
 
-        if (this.onboarding.step() > 1) {
+        if (this.onboarding.stepIndex() > 0) {
             this.commentOnboarding.close();
         }
     }
