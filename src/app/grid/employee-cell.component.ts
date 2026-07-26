@@ -3,7 +3,7 @@ import {TuiButton} from '@taiga-ui/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 
-import {CommentOnboardingService} from '../comments/comment-onboarding/comment-onboarding.service';
+import {COMMENT_ONBOARDING} from '../comments/comment-onboarding/comment-onboarding.provider';
 import {CommentsSidebarService} from '../comments/comments-sidebar/comments-sidebar.service';
 import {OnboardingService} from '../onboarding/onboarding.service';
 import {OnboardingStepDirective} from '../onboarding/onboarding-step.directive';
@@ -19,7 +19,7 @@ import {ProposalDto} from '../proposal.dto';
 export class EmployeeCellComponent implements ICellRendererAngularComp {
     protected readonly sidebar = inject(CommentsSidebarService);
     protected readonly onboarding = inject(OnboardingService);
-    protected readonly commentOnboarding = inject(CommentOnboardingService);
+    protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
     protected proposal!: ProposalDto;
 
     public agInit(params: ICellRendererParams<ProposalDto>): void {
@@ -35,14 +35,15 @@ export class EmployeeCellComponent implements ICellRendererAngularComp {
     }
 
     protected openComments(): void {
-        const firstStep = this.commentOnboarding.steps()[0];
+        const commentOnboarding = this.commentOnboarding;
+        const firstStep = commentOnboarding?.steps[0];
 
         if (
-            firstStep !== null &&
-            this.commentOnboarding.isTarget(this.proposal) &&
+            firstStep &&
+            commentOnboarding.isTarget(this.proposal) &&
             this.onboarding.isActive(firstStep)
         ) {
-            this.commentOnboarding.next();
+            commentOnboarding.next();
             return;
         }
 
