@@ -30,6 +30,7 @@ import {
         .onboarding-step-anchor._active {
             position: relative;
             z-index: 1;
+            mask-image: none;
             box-shadow:
                 0 0 0 2px #6aa5ff,
                 0 0 0 4px #fff,
