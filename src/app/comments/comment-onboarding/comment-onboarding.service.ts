@@ -1,4 +1,4 @@
-import {computed, effect, inject, Injectable, signal} from '@angular/core';
+import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 
 import {FeatureFlagsService} from '../../feature-flags.service';
 import {Onboarding} from '../../onboarding/onboarding';
@@ -29,10 +29,12 @@ export class CommentOnboardingService {
             return;
         }
 
-        const ref = this.onboarding.register({
-            id: 'comment-triggers',
-            steps: COMMENT_ONBOARDING_STEPS,
-        });
+        const ref = untracked(() =>
+            this.onboarding.register({
+                id: 'comment-triggers',
+                steps: COMMENT_ONBOARDING_STEPS,
+            }),
+        );
 
         this.ref.set(ref);
 
