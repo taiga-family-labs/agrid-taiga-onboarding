@@ -7,7 +7,12 @@
 - при `true` token `COMMENT_ONBOARDING` возвращает экземпляр `CommentOnboardingService`;
 - при `false` token возвращает `null`, а сервис не создается и onboarding не регистрируется.
 
-`CommentOnboardingService` предоставляет типизированный tuple `steps`, автоматически удаляет регистрацию при уничтожении feature scope и использует ключ `@onboarding.comment-triggers.v1`.
+`CommentOnboardingService`:
+
+- регистрирует типизированный tuple `steps`;
+- хранит переход первого шага в `onNext`, который открывает sidebar;
+- автоматически удаляет регистрацию при уничтожении feature scope;
+- использует ключ `@onboarding.comment-triggers.v1`.
 
 После окончания показа:
 
@@ -15,4 +20,4 @@
 2. удалите три `[onboardingStep]` binding из cell renderer, sidebar и comment form;
 3. удалите директорию `comments/comment-onboarding`.
 
-Общие `OnboardingService`, `Onboarding`, `OnboardingStepDirective` и `OnboardingStepComponent` останутся для других сценариев.
+Общие `OnboardingService`, `OnboardingStepDirective` и `OnboardingStepComponent` останутся для других сценариев.
