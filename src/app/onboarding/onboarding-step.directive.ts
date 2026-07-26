@@ -33,7 +33,7 @@ import {
             box-shadow:
                 0 0 0 2px #6aa5ff,
                 0 0 0 4px #fff,
-                0 0 0 6px #b5d2ff !important;
+                0 0 0 6px #b5d2ff;
         }
 
         onboarding-step footer [tuiButton] {
@@ -47,9 +47,9 @@ import {
         }
 
         tui-hint[data-appearance='onboarding'] {
-            inline-size: min(29rem, calc(100vw - 1rem)) !important;
-            max-inline-size: calc(100vw - 1rem) !important;
-            pointer-events: auto !important;
+            inline-size: min(29rem, calc(100vw - 1rem));
+            max-inline-size: calc(100vw - 1rem);
+            pointer-events: auto;
         }
     `,
     encapsulation: ViewEncapsulation.None,
