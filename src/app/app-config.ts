@@ -12,7 +12,9 @@ export class AppConfig {
     public static settings: Configuration = {};
 
     public static async load(): Promise<void> {
-        const response = await fetch(new URL('config.json', document.baseURI));
+        const response = await fetch(new URL('config.json', document.baseURI), {
+            cache: 'no-store',
+        });
 
         if (!response.ok) {
             throw new Error(`Failed to load config.json: ${response.status}`);
