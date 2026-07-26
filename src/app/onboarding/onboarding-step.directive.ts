@@ -25,6 +25,7 @@ import {type OnboardingStep} from './onboarding.types';
         .onboarding-step-anchor._active {
             position: relative;
             z-index: 1;
+            pointer-events: none;
             mask-image: none;
             box-shadow:
                 0 0 0 2px #6aa5ff,
