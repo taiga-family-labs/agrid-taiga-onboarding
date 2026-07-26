@@ -10,7 +10,7 @@
         (click)="onboarding.close()"
     ></button>
 
-    <ng-content select="[onboardingStepTitle]" />
+    <ng-content select="[tuiTitle]" />
 
     <div class="content">
         <ng-content />
@@ -18,6 +18,6 @@
 
     <footer>
         <span>{{ onboarding.step() }} из {{ onboarding.count() }}</span>
-        <ng-content select="[onboardingStepAction]" />
+        <ng-content select="[tuiButton]" />
     </footer>
 </article>
