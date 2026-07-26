@@ -14,7 +14,8 @@
 ### Общая инфраструктура
 
 - `OnboardingService` управляет одной зарегистрированной onboarding-последовательностью;
-- `Onboarding` представляет зарегистрированную последовательность;
+- `register()` возвращает типизированный tuple runtime-шагов;
+- переход между шагами описывается через optional `onNext` в definition шага;
 - `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`;
 - стили anchor и overlay подключаются самой директивой через `tuiWithStyles`;
 - `OnboardingStepComponent` задает общий layout шага и использует content projection;
@@ -47,8 +48,8 @@
 - шаги представлены типизированным immutable tuple `steps`;
 - содержимое находится в `comments/comment-onboarding/comment-onboarding-steps`;
 - каждый шаг передается в Taiga UI как `PolymorpheusComponent`;
-- открытие сайдбара объявлено рядом с anchor через `(onboardingStepOnNext)`;
-- первый шаг регистрируется только для выбранного `ProposalDto`, а не для каждой строки AG Grid;
+- первый шаг содержит `onNext`, который открывает sidebar для выбранного `ProposalDto`;
+- первый шаг привязывается только к выбранной строке AG Grid;
 - при уничтожении feature-сервиса регистрация автоматически удаляется.
 
 После удаления временного онбординга общие `OnboardingService`, `OnboardingStepDirective` и `OnboardingStepComponent` остаются для следующих сценариев. Нужно удалить только feature-provider, три `[onboardingStep]` binding и директорию `comments/comment-onboarding`.
@@ -82,7 +83,7 @@ location.reload();
 ## Поведение
 
 1. Первый шаг привязан к иконке комментария выбранной заявки в AG Grid.
-2. Кнопка `Далее` вызывает `(onboardingStepOnNext)` и открывает широкий сайдбар с целым `ProposalDto`.
+2. Кнопка `Далее` выполняет `onNext` первого шага и открывает широкий sidebar с целым `ProposalDto`.
 3. Второй шаг привязан к `tui-segmented`.
 4. Третий шаг привязан к контролу `Учитывать как обоснование`.
 5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
