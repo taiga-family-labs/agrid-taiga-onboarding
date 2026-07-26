@@ -13,21 +13,39 @@
 
 ### Общая инфраструктура
 
-- `OnboardingService` регистрирует и удаляет независимые onboarding-flow.
-- `Onboarding` представляет одну зарегистрированную последовательность.
-- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`.
+- `OnboardingService` управляет одной зарегистрированной onboarding-последовательностью;
+- `Onboarding` представляет зарегистрированную последовательность;
+- `OnboardingStepDirective` скрывает интеграцию с `TuiHint`, `TuiHintManual`, `TuiHintPosition` и `tuiDirectiveBinding`;
 - стили anchor и overlay подключаются самой директивой через `tuiWithStyles`;
 - `OnboardingStepComponent` задает общий layout шага и использует content projection;
 - интерфейсы и типы вынесены в `onboarding.types.ts`.
 
-`id` нужен для идентификации зарегистрированного flow, изоляции его шагов и построения ключа `localStorage`. Ключ формируется по шаблону `@onboarding.{id}.v{version}`, где `version` по умолчанию равна `1`.
+`id` используется только для построения ключа `localStorage`. Ключ формируется по шаблону `@onboarding.{id}.v{version}`, где `version` по умолчанию равна `1`.
+
+### Runtime configuration
+
+До bootstrap приложение загружает `config.json` и предоставляет его через token `APP_CONFIG`.
+
+```json
+{
+  "features": {
+    "enableTriggersUiImprovement": true
+  }
+}
+```
+
+`provideCommentOnboarding()` проверяет этот флаг и предоставляет token `COMMENT_ONBOARDING`:
+
+- экземпляр `CommentOnboardingService`, когда флаг включен;
+- `null`, когда флаг выключен.
+
+При выключенном флаге сервис не создается и onboarding не регистрируется.
 
 ### Онбординг комментариев
 
 - `CommentOnboardingService` регистрирует три шага;
-- шаги представлены типизированным immutable tuple `steps`, поэтому сигнал для них не нужен;
+- шаги представлены типизированным immutable tuple `steps`;
 - содержимое находится в `comments/comment-onboarding/comment-onboarding-steps`;
-- файлы шагов называются `one-step`, `two-step` и `third-step`;
 - каждый шаг передается в Taiga UI как `PolymorpheusComponent`;
 - открытие сайдбара объявлено рядом с anchor через `(onboardingStepOnNext)`;
 - первый шаг регистрируется только для выбранного `ProposalDto`, а не для каждой строки AG Grid;
@@ -43,6 +61,16 @@ npm start
 ```
 
 Откройте `http://localhost:4200`.
+
+Чтобы отключить onboarding, измените флаг в `src/config.json` и перезапустите приложение:
+
+```json
+{
+  "features": {
+    "enableTriggersUiImprovement": false
+  }
+}
+```
 
 Для повторной проверки первого посещения:
 
@@ -60,7 +88,7 @@ location.reload();
 5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
 6. `Escape` не закрывает онбординг.
 7. Прозрачный backdrop блокирует интерфейс под текущим шагом.
-8. Кнопка `Запустить онбординг` сбрасывает mute-состояние и запускает демонстрацию повторно.
+8. Кнопка `Запустить онбординг` вызывает `start(true)` и повторно запускает демонстрацию без удаления muted-state.
 
 ## Production build
 
