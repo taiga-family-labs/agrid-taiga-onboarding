@@ -1,13 +1,11 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {WA_LOCAL_STORAGE} from '@ng-web-apis/common';
-import {type PolymorpheusContent} from '@taiga-ui/polymorpheus';
 
 import {assert} from '../utils/assert';
-import {Onboarding} from './onboarding';
 import {
-    type OnboardingAnchor,
     type OnboardingOptions,
     type OnboardingStep,
+    type OnboardingStepDefinition,
     type OnboardingSteps,
 } from './onboarding.types';
 
@@ -22,75 +20,47 @@ interface RegisteredOnboarding {
 @Injectable({providedIn: 'root'})
 export class OnboardingService {
     private readonly localStorage = inject(WA_LOCAL_STORAGE);
-    private readonly registration = signal<RegisteredOnboarding | null>(null);
     private readonly activeStep = signal<OnboardingStep | null>(null);
-    private readonly anchors = new Map<OnboardingStep, Set<OnboardingAnchor>>();
-    private readonly anchorsRevision = signal(0);
+
+    private registration: RegisteredOnboarding | null = null;
 
     public readonly stepIndex = computed(() => this.activeStep()?.index ?? -1);
     public readonly isRunning = computed(() => this.activeStep() !== null);
-    public readonly count = computed(() => this.registration()?.steps.length ?? 0);
 
-    public register<const TSteps extends readonly PolymorpheusContent[]>(
+    public get count(): number {
+        return this.registration?.steps.length ?? 0;
+    }
+
+    public register<const TSteps extends readonly OnboardingStepDefinition[]>(
         options: OnboardingOptions<TSteps>,
-    ): Onboarding<TSteps> {
-        assert(this.registration() === null, 'Another onboarding is already registered');
+    ): OnboardingSteps<TSteps> {
+        assert(this.registration === null, 'Another onboarding is already registered');
         assert(
             options.steps.length > 0,
             `Onboarding "${options.id}" must contain at least one step`,
         );
 
-        const version = options.version ?? DEFAULT_VERSION;
-        const steps = options.steps.map((content, index) => ({
+        const steps = options.steps.map((step, index) => ({
+            ...step,
             index,
-            content,
         })) as OnboardingSteps<TSteps>;
 
-        this.registration.set({
-            storageKey: `@onboarding.${options.id}.v${version}`,
+        this.registration = {
+            storageKey: `@onboarding.${options.id}.v${options.version ?? DEFAULT_VERSION}`,
             steps,
-        });
-
-        return new Onboarding(this, steps);
-    }
-
-    public registerAnchor(step: OnboardingStep, anchor: OnboardingAnchor): () => void {
-        const anchors = this.anchors.get(step) ?? new Set<OnboardingAnchor>();
-
-        anchors.add(anchor);
-        this.anchors.set(step, anchors);
-        this.touchAnchors();
-
-        return () => {
-            const registered = this.anchors.get(step);
-
-            if (!registered?.delete(anchor)) {
-                return;
-            }
-
-            if (registered.size === 0) {
-                this.anchors.delete(step);
-            }
-
-            this.touchAnchors();
         };
+
+        return steps;
     }
 
-    public isActive(step: OnboardingStep, anchor?: OnboardingAnchor): boolean {
-        void this.anchorsRevision();
-
-        if (this.activeStep() !== step) {
-            return false;
-        }
-
-        return anchor === undefined || this.getActiveAnchor(step) === anchor;
+    public isActive(step: OnboardingStep): boolean {
+        return this.activeStep() === step;
     }
 
-    public start(force = false): boolean {
-        const registration = this.registration();
-        const firstStep = registration?.steps[0];
+    public start(ignoreMuted = false): boolean {
+        const firstStep = this.registration?.steps[0];
 
-        if (!firstStep || (!force && !this.shouldAutoStart())) {
+        if (!firstStep || (!ignoreMuted && !this.canStart())) {
             return false;
         }
 
@@ -100,14 +70,14 @@ export class OnboardingService {
     }
 
     public next(): void {
-        const registration = this.registration();
+        const registration = this.registration;
         const currentStep = this.activeStep();
 
         if (!registration || !currentStep) {
             return;
         }
 
-        this.getActiveAnchor(currentStep)?.onNext();
+        currentStep.onNext?.();
 
         const nextStep = registration.steps[currentStep.index + 1];
 
@@ -120,47 +90,25 @@ export class OnboardingService {
     }
 
     public close(): void {
-        if (this.activeStep() === null) {
+        const registration = this.registration;
+
+        if (registration === null || this.activeStep() === null) {
             return;
         }
 
-        const registration = this.registration();
-
-        if (registration) {
-            this.localStorage.setItem(registration.storageKey, MUTED_STATE);
-        }
-
-        this.reset();
+        this.localStorage.setItem(registration.storageKey, MUTED_STATE);
+        this.activeStep.set(null);
     }
 
     public unregister(): void {
-        this.reset();
-        this.registration.set(null);
-
-        if (this.anchors.size > 0) {
-            this.anchors.clear();
-            this.touchAnchors();
-        }
-    }
-
-    public shouldAutoStart(): boolean {
-        const registration = this.registration();
-
-        return (
-            registration !== null &&
-            this.localStorage.getItem(registration.storageKey) !== MUTED_STATE
-        );
-    }
-
-    private getActiveAnchor(step: OnboardingStep): OnboardingAnchor | undefined {
-        return this.anchors.get(step)?.values().next().value;
-    }
-
-    private touchAnchors(): void {
-        this.anchorsRevision.update((revision) => revision + 1);
-    }
-
-    private reset(): void {
         this.activeStep.set(null);
+        this.registration = null;
+    }
+
+    public canStart(): boolean {
+        return (
+            this.registration !== null &&
+            this.localStorage.getItem(this.registration.storageKey) !== MUTED_STATE
+        );
     }
 }
