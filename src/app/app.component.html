@@ -8,15 +8,27 @@
                 </h1>
             </div>
 
-            <button
-                appearance="outline"
-                size="m"
-                tuiButton
-                type="button"
-                (click)="startTour()"
-            >
-                Запустить онбординг
-            </button>
+            <div class="toolbar-actions">
+                <label class="feature-flag">
+                    <input
+                        type="checkbox"
+                        [checked]="featureFlags.enableCommentsOnboarding()"
+                        (change)="setCommentsOnboardingEnabled($event)"
+                    />
+                    <span>enableCommentsOnboarding</span>
+                </label>
+
+                <button
+                    appearance="outline"
+                    size="m"
+                    tuiButton
+                    type="button"
+                    [disabled]="!featureFlags.enableCommentsOnboarding()"
+                    (click)="startTour()"
+                >
+                    Запустить онбординг
+                </button>
+            </div>
         </header>
 
         <div class="workspace" [class.sidebar-open]="sidebar.opened()">
