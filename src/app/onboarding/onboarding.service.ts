@@ -133,14 +133,6 @@ export class OnboardingService {
         this.reset();
     }
 
-    public clearMutedState(): void {
-        const registration = this.registration();
-
-        if (registration) {
-            this.localStorage.removeItem(registration.storageKey);
-        }
-    }
-
     public unregister(): void {
         this.reset();
         this.registration.set(null);
