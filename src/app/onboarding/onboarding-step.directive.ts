@@ -27,31 +27,26 @@ import {
     standalone: true,
     template: '',
     styles: `
-        .onboarding-active-anchor {
+        [onboardingActiveAnchor] {
             position: relative;
-            z-index: 901;
+            z-index: 1;
             box-shadow:
                 0 0 0 2px #6aa5ff,
                 0 0 0 4px #fff,
                 0 0 0 6px #b5d2ff !important;
         }
 
-        [onboardingStepAction] {
+        onboarding-step footer [tuiButton] {
             min-inline-size: 5.75rem;
-            background: #fff !important;
-            color: #303744 !important;
+            background: #fff;
+            color: #303744;
         }
 
-        [onboardingStepAction]:hover {
+        onboarding-step footer [tuiButton]:hover {
             background: #f2f5fa !important;
         }
 
-        tui-root > tui-popups {
-            z-index: 1000;
-        }
-
         tui-hint[data-appearance='onboarding'] {
-            z-index: 1001;
             inline-size: min(29rem, calc(100vw - 1rem)) !important;
             max-inline-size: calc(100vw - 1rem) !important;
             pointer-events: auto !important;
@@ -66,7 +61,7 @@ class OnboardingStyles {}
     selector: '[onboardingStep]',
     hostDirectives: [TuiHintDirective, TuiHintManual],
     host: {
-        '[class.onboarding-active-anchor]': 'active()',
+        '[attr.onboardingActiveAnchor]': 'active() ? "" : null',
     },
 })
 export class OnboardingStepDirective {
@@ -88,31 +83,31 @@ export class OnboardingStepDirective {
 
     protected readonly styles = tuiWithStyles(OnboardingStyles);
 
-    private readonly registration = effect((onCleanup) => {
+    protected readonly registration = effect((onCleanup) => {
         const unregister = this.onboarding.registerAnchor(this.step(), this.anchor);
 
         onCleanup(unregister);
     });
 
-    private readonly content = tuiDirectiveBinding(
+    protected readonly content = tuiDirectiveBinding(
         TuiHintDirective,
         'content',
         computed(() => this.step().content),
     );
 
-    private readonly appearance = tuiDirectiveBinding(
+    protected readonly appearance = tuiDirectiveBinding(
         TuiHintDirective,
         'appearance',
         'onboarding',
     );
 
-    private readonly manual = tuiDirectiveBinding(
+    protected readonly manual = tuiDirectiveBinding(
         TuiHintManual,
         'tuiHintManual',
         this.active,
     );
 
-    private readonly position = tuiDirectiveBinding(
+    protected readonly position = tuiDirectiveBinding(
         TuiHintPosition,
         'direction',
         this.direction,
