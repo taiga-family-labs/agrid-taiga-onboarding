@@ -2,51 +2,64 @@ import {DestroyRef, inject, Injectable, signal} from '@angular/core';
 
 import {OnboardingService} from '../../onboarding/onboarding.service';
 import {ProposalDto} from '../../proposal.dto';
+import {CommentsSidebarService} from '../comments-sidebar/comments-sidebar.service';
 import {ONE_STEP} from './comment-onboarding-steps/one-step.component';
 import {THIRD_STEP} from './comment-onboarding-steps/third-step.component';
 import {TWO_STEP} from './comment-onboarding-steps/two-step.component';
 
-const COMMENT_ONBOARDING_STEPS = [ONE_STEP, TWO_STEP, THIRD_STEP] as const;
-
 @Injectable()
 export class CommentOnboardingService {
-    private readonly ref = inject(OnboardingService).register({
-        id: 'comment-triggers',
-        steps: COMMENT_ONBOARDING_STEPS,
-    });
-    private readonly targetProposalId = signal<number | null>(null);
+    private readonly onboarding = inject(OnboardingService);
+    private readonly sidebar = inject(CommentsSidebarService);
+    private readonly targetProposal = signal<ProposalDto | null>(null);
 
-    public readonly steps = this.ref.steps;
+    public readonly steps = this.onboarding.register({
+        id: 'comment-triggers',
+        steps: [
+            {
+                content: ONE_STEP,
+                onNext: () => {
+                    const proposal = this.targetProposal();
+
+                    if (proposal) {
+                        this.sidebar.open(proposal);
+                    }
+                },
+            },
+            {content: TWO_STEP},
+            {content: THIRD_STEP},
+        ] as const,
+    });
 
     public constructor() {
-        inject(DestroyRef).onDestroy(() => this.ref.unregister());
+        inject(DestroyRef).onDestroy(() => this.onboarding.unregister());
     }
 
-    public start(proposal: ProposalDto, force = false): boolean {
-        this.targetProposalId.set(proposal.id);
+    public start(proposal: ProposalDto, ignoreMuted = false): boolean {
+        this.targetProposal.set(proposal);
 
-        const started = this.ref.start(force);
+        const started = this.onboarding.start(ignoreMuted);
 
         if (!started) {
-            this.targetProposalId.set(null);
+            this.targetProposal.set(null);
         }
 
         return started;
     }
 
     public isTarget(proposal: ProposalDto): boolean {
-        return this.targetProposalId() === proposal.id;
+        return this.targetProposal()?.id === proposal.id;
     }
 
     public next(): void {
-        this.ref.next();
+        this.onboarding.next();
     }
 
     public close(): void {
-        this.ref.close();
+        this.onboarding.close();
     }
 
-    public shouldAutoStart(): boolean {
-        return this.ref.shouldAutoStart();
+    public canStart(): boolean {
+        return this.onboarding.canStart();
     }
 }
