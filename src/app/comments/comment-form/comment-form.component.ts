@@ -15,6 +15,7 @@ import {COMMENT_ONBOARDING} from '../comment-onboarding/comment-onboarding.provi
 })
 export class CommentFormComponent {
     protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
+    protected readonly onboardingStep = this.commentOnboarding?.steps[2] ?? null;
     protected comment = '';
     protected isJustification = false;
 
