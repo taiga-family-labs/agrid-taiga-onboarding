@@ -77,13 +77,8 @@ export class AppComponent {
 
     protected startTour(ignoreMuted = false): void {
         const proposal = this.rowData[0];
-        const commentOnboarding = this.commentOnboarding;
 
-        if (
-            !proposal ||
-            commentOnboarding === null ||
-            (!ignoreMuted && !commentOnboarding.canStart())
-        ) {
+        if (!proposal || !this.commentOnboarding?.start(proposal, ignoreMuted)) {
             return;
         }
 
@@ -94,14 +89,13 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        commentOnboarding.start(proposal, ignoreMuted);
     }
 
     protected closeSidebar(): void {
         this.sidebar.close();
 
-        if (this.onboarding.stepIndex() > 0) {
-            this.commentOnboarding?.close();
+        if (this.onboarding.isRunning()) {
+            this.onboarding.close();
         }
     }
 }
