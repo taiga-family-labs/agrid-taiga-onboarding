@@ -90,7 +90,7 @@ export class AppComponent {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
-        this.commentOnboarding.start();
+        this.commentOnboarding.start(proposal);
     }
 
     protected closeSidebar(): void {
