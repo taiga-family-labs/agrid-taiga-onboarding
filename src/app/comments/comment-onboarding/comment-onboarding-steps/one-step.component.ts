@@ -6,20 +6,20 @@ import {OnboardingStepComponent} from '../../../onboarding/onboarding-step.compo
 import {OnboardingService} from '../../../onboarding/onboarding.service';
 
 @Component({
-    selector: 'comment-onboarding-one-step',
+    selector: 'travel-notes-onboarding-one-step',
     imports: [OnboardingStepComponent, TuiButton, TuiTitle],
     template: `
         <onboarding-step>
             <h3 tuiTitle>
-                Обоснования переехали
-                <span tuiSubtitle>По иконке комментария теперь можно увидеть и отклонения по заявке</span>
+                Заметки прямо из таблицы
+                <span tuiSubtitle>У каждого маршрута есть отдельная панель для идей и деталей поездки</span>
             </h3>
 
             <div class="preview">
-                @for (name of names; track name; let index = $index) {
+                @for (route of routes; track route; let index = $index) {
                     <div class="row">
-                        <span>{{ name }}</span>
-                        <span class="comment" [class.warning]="index === 2">●</span>
+                        <span>{{ route }}</span>
+                        <span class="note" [class.active]="index === 0">●</span>
                     </div>
                 }
             </div>
@@ -57,23 +57,23 @@ import {OnboardingService} from '../../../onboarding/onboarding.service';
             font-size: 0.75rem;
         }
 
-        .comment {
+        .note {
             color: #8a929c;
         }
 
-        .warning {
-            color: #e5484d;
+        .active {
+            color: #4584e6;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OneStepComponent {
     protected readonly onboarding = inject(OnboardingService);
-    protected readonly names = [
-        'Анна Агафонова',
-        'Николай Арсеньев',
-        'Олег Володин',
-        'Татьяна Воробьева',
+    protected readonly routes = [
+        'Киото и Нара',
+        'Лиссабон и Синтра',
+        'Таллин и острова',
+        'Рим и Флоренция',
     ];
 }
 
