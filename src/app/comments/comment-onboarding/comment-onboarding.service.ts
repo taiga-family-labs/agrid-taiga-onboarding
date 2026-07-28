@@ -1,28 +1,28 @@
 import {DestroyRef, inject, Injectable, signal} from '@angular/core';
 
 import {OnboardingService} from '../../onboarding/onboarding.service';
-import {ProposalDto} from '../../proposal.dto';
-import {CommentsSidebarService} from '../comments-sidebar/comments-sidebar.service';
+import {TravelPlanDto} from '../../proposal.dto';
+import {TravelNotesSidebarService} from '../comments-sidebar/comments-sidebar.service';
 import {ONE_STEP} from './comment-onboarding-steps/one-step.component';
 import {THIRD_STEP} from './comment-onboarding-steps/third-step.component';
 import {TWO_STEP} from './comment-onboarding-steps/two-step.component';
 
 @Injectable()
-export class CommentOnboardingService {
+export class TravelNotesOnboardingService {
     private readonly onboarding = inject(OnboardingService);
-    private readonly sidebar = inject(CommentsSidebarService);
-    private readonly targetProposal = signal<ProposalDto | null>(null);
+    private readonly sidebar = inject(TravelNotesSidebarService);
+    private readonly targetTravelPlan = signal<TravelPlanDto | null>(null);
 
     public readonly steps = this.onboarding.register({
-        id: 'comment-triggers',
+        id: 'travel-notes',
         steps: [
             {
                 content: ONE_STEP,
                 onNext: () => {
-                    const proposal = this.targetProposal();
+                    const travelPlan = this.targetTravelPlan();
 
-                    if (proposal) {
-                        this.sidebar.open(proposal);
+                    if (travelPlan) {
+                        this.sidebar.open(travelPlan);
                     }
                 },
             },
@@ -35,22 +35,22 @@ export class CommentOnboardingService {
         inject(DestroyRef).onDestroy(() => this.onboarding.unregister());
     }
 
-    public start(proposal: ProposalDto, ignoreMuted = false): boolean {
-        this.targetProposal.set(proposal);
+    public start(travelPlan: TravelPlanDto, ignoreMuted = false): boolean {
+        this.targetTravelPlan.set(travelPlan);
 
         const started = this.onboarding.start(ignoreMuted);
 
         if (!started) {
-            this.targetProposal.set(null);
+            this.targetTravelPlan.set(null);
         }
 
         return started;
     }
 
-    public isFirstStepTarget(proposal: ProposalDto): boolean {
+    public isFirstStepTarget(travelPlan: TravelPlanDto): boolean {
         return (
             this.onboarding.isActive(this.steps[0]) &&
-            this.targetProposal()?.id === proposal.id
+            this.targetTravelPlan()?.id === travelPlan.id
         );
     }
 }
