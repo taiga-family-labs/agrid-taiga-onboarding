@@ -6,26 +6,26 @@ import {OnboardingStepComponent} from '../../../onboarding/onboarding-step.compo
 import {OnboardingService} from '../../../onboarding/onboarding.service';
 
 @Component({
-    selector: 'comment-onboarding-two-step',
+    selector: 'travel-notes-onboarding-two-step',
     imports: [OnboardingStepComponent, TuiButton, TuiTitle],
     template: `
         <onboarding-step>
             <h3 tuiTitle>
-                Все комментарии в одном месте
-                <span tuiSubtitle>Комментарии, отклонения и обоснования теперь будут находиться здесь</span>
+                Разделяйте заметки по смыслу
+                <span tuiSubtitle>Переключайтесь между подготовкой к поездке и впечатлениями после нее</span>
             </h3>
 
             <div class="preview">
                 <div class="segments">
                     <span>Все</span>
-                    <span>Обоснования</span>
-                    <span>Другие комментарии</span>
+                    <span>Подготовка</span>
+                    <span>Впечатления</span>
                 </div>
 
                 <div class="panel">
-                    <strong>Отклонения от правил в заявке</strong>
-                    <span>• Превышение рекомендаций</span>
-                    <span>• Новый CR выше текущего</span>
+                    <strong>Подготовка к маршруту</strong>
+                    <span>• Проверить расписание поездов</span>
+                    <span>• Сохранить адрес отеля</span>
                 </div>
             </div>
 

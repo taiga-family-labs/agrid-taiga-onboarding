@@ -6,18 +6,18 @@ import {OnboardingStepComponent} from '../../../onboarding/onboarding-step.compo
 import {OnboardingService} from '../../../onboarding/onboarding.service';
 
 @Component({
-    selector: 'comment-onboarding-third-step',
+    selector: 'travel-notes-onboarding-third-step',
     imports: [OnboardingStepComponent, TuiButton, TuiTitle],
     template: `
         <onboarding-step>
             <h3 tuiTitle>
-                Комментарий как обоснование
-                <span tuiSubtitle>Если по заявке есть отклонения от правил, комментарий может учитываться как обоснование</span>
+                Добавляйте важное в чек-лист
+                <span tuiSubtitle>Отметьте заметку, если ее нужно выполнить до начала поездки</span>
             </h3>
 
             <div class="preview">
                 <span class="checkbox"></span>
-                <span>Учитывать как обоснование</span>
+                <span>Добавить в чек-лист</span>
             </div>
 
             <button

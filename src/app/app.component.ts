@@ -10,33 +10,33 @@ import {
 } from 'ag-grid-community';
 
 import {
-    COMMENT_ONBOARDING,
-    provideCommentOnboarding,
+    provideTravelNotesOnboarding,
+    TRAVEL_NOTES_ONBOARDING,
 } from './comments/comment-onboarding/comment-onboarding.provider';
-import {CommentsSidebarComponent} from './comments/comments-sidebar/comments-sidebar.component';
-import {CommentsSidebarService} from './comments/comments-sidebar/comments-sidebar.service';
-import {PROPOSALS} from './data/proposals';
-import {EmployeeCellComponent} from './grid/employee-cell.component';
+import {TravelNotesSidebarComponent} from './comments/comments-sidebar/comments-sidebar.component';
+import {TravelNotesSidebarService} from './comments/comments-sidebar/comments-sidebar.service';
+import {TRAVEL_PLANS} from './data/proposals';
+import {TravelPlanCellComponent} from './grid/employee-cell.component';
 import {OnboardingService} from './onboarding/onboarding.service';
-import {ProposalDto} from './proposal.dto';
+import {TravelPlanDto} from './proposal.dto';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
     selector: 'onboarding-demo',
-    imports: [AgGridAngular, CommentsSidebarComponent, TuiButton, TuiRoot, TuiTitle],
-    providers: [provideCommentOnboarding(), CommentsSidebarService],
+    imports: [AgGridAngular, TravelNotesSidebarComponent, TuiButton, TuiRoot, TuiTitle],
+    providers: [provideTravelNotesOnboarding(), TravelNotesSidebarService],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
     protected readonly onboarding = inject(OnboardingService);
-    protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
-    protected readonly sidebar = inject(CommentsSidebarService);
-    protected readonly rowData = PROPOSALS;
+    protected readonly travelNotesOnboarding = inject(TRAVEL_NOTES_ONBOARDING);
+    protected readonly sidebar = inject(TravelNotesSidebarService);
+    protected readonly rowData = TRAVEL_PLANS;
 
-    protected readonly defaultColDef: ColDef<ProposalDto> = {
+    protected readonly defaultColDef: ColDef<TravelPlanDto> = {
         sortable: true,
         filter: true,
         resizable: true,
@@ -44,25 +44,25 @@ export class AppComponent {
         minWidth: 140,
     };
 
-    protected readonly columnDefs: ColDef<ProposalDto>[] = [
+    protected readonly columnDefs: ColDef<TravelPlanDto>[] = [
         {
-            colId: 'employeeFullName',
-            field: 'employeeFullName',
-            headerName: 'Сотрудник',
-            cellRenderer: EmployeeCellComponent,
-            minWidth: 320,
+            colId: 'title',
+            field: 'title',
+            headerName: 'Маршрут',
+            cellRenderer: TravelPlanCellComponent,
+            minWidth: 300,
             flex: 1.5,
         },
-        {field: 'department', headerName: 'Подразделение', minWidth: 210},
-        {field: 'currentCr', headerName: 'Текущий CR', minWidth: 130},
-        {field: 'recommendedCr', headerName: 'Новый CR', minWidth: 130},
-        {field: 'status', headerName: 'Статус', minWidth: 180},
+        {field: 'country', headerName: 'Страна', minWidth: 190},
+        {field: 'season', headerName: 'Сезон', minWidth: 130},
+        {field: 'durationDays', headerName: 'Дней', minWidth: 110},
+        {field: 'status', headerName: 'Статус', minWidth: 170},
     ];
 
-    private gridApi: GridApi<ProposalDto> | null = null;
+    private gridApi: GridApi<TravelPlanDto> | null = null;
     private autoStartAttempted = false;
 
-    protected onGridReady(event: GridReadyEvent<ProposalDto>): void {
+    protected onGridReady(event: GridReadyEvent<TravelPlanDto>): void {
         this.gridApi = event.api;
     }
 
@@ -76,16 +76,19 @@ export class AppComponent {
     }
 
     protected startTour(ignoreMuted = false): void {
-        const proposal = this.rowData[0];
+        const travelPlan = this.rowData[0];
 
-        if (!proposal || !this.commentOnboarding?.start(proposal, ignoreMuted)) {
+        if (
+            !travelPlan ||
+            !this.travelNotesOnboarding?.start(travelPlan, ignoreMuted)
+        ) {
             return;
         }
 
         this.sidebar.close();
-        this.gridApi?.ensureColumnVisible('employeeFullName');
+        this.gridApi?.ensureColumnVisible('title');
         this.gridApi?.forEachNode((node) => {
-            if (node.data?.id === proposal.id) {
+            if (node.data?.id === travelPlan.id) {
                 this.gridApi?.ensureNodeVisible(node, 'middle');
             }
         });
