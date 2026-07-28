@@ -1,6 +1,6 @@
 # AG Grid + Taiga UI onboarding prototype
 
-Учебный прототип трехшагового онбординга для AG Grid и правого сайдбара комментариев.
+Учебный прототип трехшагового онбординга для AG Grid и правого сайдбара заметок. Демонстрационный сценарий построен вокруг планирования путешествий и не привязан к реальному корпоративному продукту.
 
 ## Стек
 
@@ -30,25 +30,25 @@
 ```json
 {
   "features": {
-    "enableTriggersUiImprovement": true
+    "enableTravelNotesOnboarding": true
   }
 }
 ```
 
-`provideCommentOnboarding()` проверяет этот флаг и предоставляет token `COMMENT_ONBOARDING`:
+`provideTravelNotesOnboarding()` проверяет этот флаг и предоставляет token `TRAVEL_NOTES_ONBOARDING`:
 
-- экземпляр `CommentOnboardingService`, когда флаг включен;
+- экземпляр `TravelNotesOnboardingService`, когда флаг включен;
 - `null`, когда флаг выключен.
 
 При выключенном флаге сервис не создается и onboarding не регистрируется.
 
-### Онбординг комментариев
+### Онбординг заметок о путешествии
 
-- `CommentOnboardingService` регистрирует три шага;
+- `TravelNotesOnboardingService` регистрирует три шага;
 - шаги представлены типизированным immutable tuple `steps`;
 - содержимое находится в `comments/comment-onboarding/comment-onboarding-steps`;
 - каждый шаг передается в Taiga UI как `PolymorpheusComponent`;
-- первый шаг содержит `onNext`, который открывает sidebar для выбранного `ProposalDto`;
+- первый шаг содержит `onNext`, который открывает sidebar для выбранного `TravelPlanDto`;
 - первый шаг привязывается только к выбранной строке AG Grid;
 - при уничтожении feature-сервиса регистрация автоматически удаляется.
 
@@ -68,7 +68,7 @@ npm start
 ```json
 {
   "features": {
-    "enableTriggersUiImprovement": false
+    "enableTravelNotesOnboarding": false
   }
 }
 ```
@@ -76,20 +76,21 @@ npm start
 Для повторной проверки первого посещения:
 
 ```js
-localStorage.removeItem('@onboarding.comment-triggers.v1');
+localStorage.removeItem('@onboarding.travel-notes.v1');
 location.reload();
 ```
 
-## Поведение
+## Демонстрационный сценарий
 
-1. Первый шаг привязан к иконке комментария выбранной заявки в AG Grid.
-2. Кнопка `Далее` выполняет `onNext` первого шага и открывает широкий sidebar с целым `ProposalDto`.
-3. Второй шаг привязан к `tui-segmented`.
-4. Третий шаг привязан к контролу `Учитывать как обоснование`.
-5. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
-6. `Escape` не закрывает онбординг.
-7. Прозрачный backdrop блокирует интерфейс под текущим шагом.
-8. Кнопка `Запустить онбординг` вызывает `start(true)` и повторно запускает демонстрацию без удаления muted-state.
+1. Таблица содержит вымышленные маршруты, страны, сезоны, длительность и статус планирования.
+2. Первый шаг привязан к иконке заметок выбранного маршрута в AG Grid.
+3. Кнопка `Далее` выполняет `onNext` первого шага и открывает sidebar с выбранным `TravelPlanDto`.
+4. Второй шаг объясняет категории заметок: `Все`, `Подготовка` и `Впечатления`.
+5. Третий шаг показывает, как добавить важную заметку в чек-лист подготовки.
+6. Крестик или `Понятно` сохраняют `muted` в `localStorage`.
+7. `Escape` не закрывает онбординг.
+8. Прозрачный backdrop блокирует интерфейс под текущим шагом.
+9. Кнопка `Запустить онбординг` вызывает `start(true)` и повторно запускает демонстрацию без удаления muted-state.
 
 ## Production build
 
