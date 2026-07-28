@@ -30,7 +30,7 @@
 ```json
 {
   "features": {
-    "enableTravelNotesOnboarding": true
+    "enableOnboarding": true
   }
 }
 ```
@@ -57,7 +57,7 @@
 ## Локальный запуск
 
 ```bash
-npm install
+npm ci
 npm start
 ```
 
@@ -68,7 +68,7 @@ npm start
 ```json
 {
   "features": {
-    "enableTravelNotesOnboarding": false
+    "enableOnboarding": false
   }
 }
 ```
@@ -110,6 +110,7 @@ npm run build:pages
 
 Workflow `.github/workflows/pages.yml`:
 
+- устанавливает зависимости через `npm ci` по зафиксированному `package-lock.json`;
 - собирает проект для каждого Pull Request;
 - собирает и публикует GitHub Pages после push в `main`;
 - поддерживает ручной запуск через `workflow_dispatch`;
