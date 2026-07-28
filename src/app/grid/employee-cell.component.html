@@ -1,12 +1,12 @@
 <div class="employee-cell">
-    <span class="name">{{ proposal.employeeFullName }}</span>
+    <span class="name">{{ travelPlan.title }}</span>
 
     <button
         appearance="flat"
         onboardingStepDirection="right"
-        [attr.aria-label]="'Открыть комментарии: ' + proposal.employeeFullName"
+        [attr.aria-label]="'Открыть заметки: ' + travelPlan.title"
         [onboardingStep]="
-            commentOnboarding?.isFirstStepTarget(proposal)
+            travelNotesOnboarding?.isFirstStepTarget(travelPlan)
                 ? onboardingStep
                 : null
         "
@@ -14,6 +14,6 @@
         size="xs"
         tuiIconButton
         type="button"
-        (click)="openComments()"
+        (click)="openNotes()"
     ></button>
 </div>
