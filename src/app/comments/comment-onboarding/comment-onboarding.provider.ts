@@ -14,7 +14,7 @@ export function provideTravelNotesOnboarding(): Provider {
         {
             provide: TRAVEL_NOTES_ONBOARDING,
             useFactory: () =>
-                inject(APP_CONFIG).features?.enableTravelNotesOnboarding
+                inject(APP_CONFIG).features?.enableOnboarding
                     ? inject(TravelNotesOnboardingService)
                     : null,
         },
