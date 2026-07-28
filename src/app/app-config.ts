@@ -2,7 +2,7 @@ import {InjectionToken, type Provider} from '@angular/core';
 
 export interface Configuration {
     readonly features?: {
-        readonly enableTravelNotesOnboarding?: boolean;
+        readonly enableOnboarding?: boolean;
     };
 }
 
