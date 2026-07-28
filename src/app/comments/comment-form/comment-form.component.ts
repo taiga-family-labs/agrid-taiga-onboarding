@@ -3,31 +3,31 @@ import {FormsModule} from '@angular/forms';
 import {TuiButton, TuiIcon} from '@taiga-ui/core';
 
 import {OnboardingStepDirective} from '../../onboarding/onboarding-step.directive';
-import {ProposalDto} from '../../proposal.dto';
-import {COMMENT_ONBOARDING} from '../comment-onboarding/comment-onboarding.provider';
+import {TravelPlanDto} from '../../proposal.dto';
+import {TRAVEL_NOTES_ONBOARDING} from '../comment-onboarding/comment-onboarding.provider';
 
 @Component({
-    selector: 'comment-form',
+    selector: 'travel-note-form',
     imports: [FormsModule, OnboardingStepDirective, TuiButton, TuiIcon],
     templateUrl: './comment-form.component.html',
     styleUrl: './comment-form.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentFormComponent {
-    protected readonly commentOnboarding = inject(COMMENT_ONBOARDING);
-    protected readonly onboardingStep = this.commentOnboarding?.steps[2] ?? null;
-    protected comment = '';
-    protected isJustification = false;
+export class TravelNoteFormComponent {
+    protected readonly travelNotesOnboarding = inject(TRAVEL_NOTES_ONBOARDING);
+    protected readonly onboardingStep = this.travelNotesOnboarding?.steps[2] ?? null;
+    protected note = '';
+    protected addToChecklist = false;
 
-    public readonly proposal = input.required<ProposalDto>();
+    public readonly travelPlan = input.required<TravelPlanDto>();
 
     protected cancel(): void {
-        this.comment = '';
-        this.isJustification = false;
+        this.note = '';
+        this.addToChecklist = false;
     }
 
     protected submit(): void {
-        this.comment = '';
-        this.isJustification = false;
+        this.note = '';
+        this.addToChecklist = false;
     }
 }
